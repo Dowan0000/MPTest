@@ -15,7 +15,7 @@ AShooterCharacter::AShooterCharacter()
 	SpringArm->SetupAttachment(RootComponent);
 	Camera->SetupAttachment(SpringArm);
 
-	bUseControllerRotationPitch = true;
+	SpringArm->bUsePawnControlRotation = true;
 }
 
 void AShooterCharacter::BeginPlay()

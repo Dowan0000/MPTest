@@ -27,9 +27,7 @@ void UShooterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		Speed = Character->GetVelocity().Size();
 		IsInAir = Character->GetMovementComponent()->IsFalling();
 		
-		FRotator AimRotation = Character->GetBaseAimRotation();
-		FRotator MovementRotation = UKismetMathLibrary::MakeRotFromX(Character->GetVelocity());
-		Direction = UKismetMathLibrary::NormalizedDeltaRotator(MovementRotation, AimRotation).Yaw;
+		Direction = UKismetMathLibrary::MakeRotFromX(Character->GetVelocity()).Yaw;
 		
 		FString RotationMesagge = FString::Printf(TEXT("Direction : %f"), Direction);
 		GEngine->AddOnScreenDebugMessage(1, 0.f, FColor::Red, RotationMesagge);
