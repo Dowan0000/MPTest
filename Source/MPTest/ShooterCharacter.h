@@ -26,7 +26,7 @@ protected:
 	void LookUp(float Value);
 	void LookRight(float Value);
 
-
+	void PressShoot();
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
@@ -35,8 +35,11 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* Camera;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class AActor* EquipWeapon;
 
 public:	
-
+	FORCEINLINE AActor* GetEquipWeapon() const { return EquipWeapon; }
+	FORCEINLINE void SetEquipWeapon(AActor* NewWeapon) { EquipWeapon = NewWeapon; }
 
 };

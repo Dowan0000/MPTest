@@ -5,6 +5,7 @@
 #include "Components/BoxComponent.h"
 #include "ShooterCharacter.h"
 #include "Engine/SkeletalMeshSocket.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -35,6 +36,7 @@ void AWeapon::BeginPlay()
 	Super::BeginPlay();
 	
 	Box->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::BoxBeginOverlap);
+	
 }
 
 // Called every frame
@@ -46,13 +48,39 @@ void AWeapon::Tick(float DeltaTime)
 
 void AWeapon::BoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	AShooterCharacter* Character = Cast<AShooterCharacter>(OtherActor);
+	Character = Cast<AShooterCharacter>(OtherActor);
 	if (Character)
 	{
 		const USkeletalMeshSocket* SocketName = Character->GetMesh()->GetSocketByName(FName("hand_r_socket"));
 		if (SocketName)
 		{
 			SocketName->AttachActor(this, Character->GetMesh());
+			SetOwner(Character);
+			Character->SetEquipWeapon(this);
+
+			Box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			Box->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+		}
+	}
+}
+
+void AWeapon::PressShoot_Implementation()
+{
+	if (Character)
+	{
+		if (ShootMontage)
+		{
+			Character->PlayAnimMontage(ShootMontage);
+		}
+		
+		const USkeletalMeshSocket* SocketName = Mesh->GetSocketByName(FName("MuzzleFlash"));
+		if (SocketName)
+		{
+			const FTransform SocketTreansform = SocketName->GetSocketTransform(Mesh);
+			if (ShootEffect)
+			{
+				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShootEffect, SocketTreansform);
+			}
 		}
 	}
 }

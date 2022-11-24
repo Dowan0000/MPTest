@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "WeaponInterface.h"
 #include "Weapon.generated.h"
 
 UCLASS()
-class MPTEST_API AWeapon : public AActor
+class MPTEST_API AWeapon : public AActor, public IWeaponInterface
 {
 	GENERATED_BODY()
 	
@@ -22,6 +23,10 @@ protected:
 	UFUNCTION()
 	void BoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void PressShoot();
+	virtual void PressShoot_Implementation() override;
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
 	class UBoxComponent* Box;
@@ -29,6 +34,14 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
 	class USkeletalMeshComponent* Mesh;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
+	class AShooterCharacter* Character;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shoot")
+	class UAnimMontage* ShootMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shoot")
+	class UParticleSystem* ShootEffect;
 
 public:	
 	

@@ -4,6 +4,7 @@
 #include "ShooterCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "WeaponInterface.h"
 
 AShooterCharacter::AShooterCharacter()
 {
@@ -38,6 +39,9 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAxis(TEXT("LeftRight"), this, &AShooterCharacter::LeftRight);
 	PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &AShooterCharacter::LookUp);
 	PlayerInputComponent->BindAxis(TEXT("LookRight"), this, &AShooterCharacter::LookRight);
+	
+	PlayerInputComponent->BindAction(TEXT("Shoot"), EInputEvent::IE_Pressed, this, &AShooterCharacter::PressShoot);
+
 }
 
 void AShooterCharacter::UpDown(float Value)
@@ -68,5 +72,17 @@ void AShooterCharacter::LookUp(float Value)
 void AShooterCharacter::LookRight(float Value)
 {
 	AddControllerYawInput(Value);
+}
+
+void AShooterCharacter::PressShoot()
+{
+	if (EquipWeapon)
+	{
+		IWeaponInterface* Interface = Cast<IWeaponInterface>(EquipWeapon);
+		if (Interface)
+		{
+			Interface->Execute_PressShoot(EquipWeapon);
+		}
+	}
 }
 
