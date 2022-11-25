@@ -5,6 +5,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "WeaponInterface.h"
+#include "Net/UnrealNetwork.h"
+#include "Weapon.h"
 
 AShooterCharacter::AShooterCharacter()
 {
@@ -76,6 +78,16 @@ void AShooterCharacter::LookRight(float Value)
 
 void AShooterCharacter::PressShoot()
 {
+	ReqPressShoot();
+}
+
+void AShooterCharacter::ReqPressShoot_Implementation()
+{
+	ResPressShoot();
+}
+
+void AShooterCharacter::ResPressShoot_Implementation()
+{
 	if (EquipWeapon)
 	{
 		IWeaponInterface* Interface = Cast<IWeaponInterface>(EquipWeapon);
@@ -85,4 +97,3 @@ void AShooterCharacter::PressShoot()
 		}
 	}
 }
-

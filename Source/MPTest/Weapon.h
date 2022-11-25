@@ -37,13 +37,13 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
 	class AShooterCharacter* Character;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shoot")
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadOnly, Category = "Shoot")
 	class UAnimMontage* ShootMontage;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shoot")
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadOnly, Category = "Shoot")
 	class UParticleSystem* ShootEffect;
 
 public:	
-	
+	FORCEINLINE USkeletalMeshComponent* GetMesh() const { return Mesh; }
 
 };

@@ -10,7 +10,7 @@ UCLASS()
 class MPTEST_API AShooterCharacter : public ACharacter
 {
 	GENERATED_BODY()
-
+		
 public:
 	AShooterCharacter();
 
@@ -28,6 +28,12 @@ protected:
 
 	void PressShoot();
 
+	UFUNCTION(Server, Reliable)
+	void ReqPressShoot();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void ResPressShoot();
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* SpringArm;
@@ -35,11 +41,16 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* Camera;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class AActor* EquipWeapon;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly,Category = "Weapon", meta = (AllowPrivateAccess = "true"))
+	class AWeapon* EquipWeapon;
+
+
+	
 
 public:	
-	FORCEINLINE AActor* GetEquipWeapon() const { return EquipWeapon; }
-	FORCEINLINE void SetEquipWeapon(AActor* NewWeapon) { EquipWeapon = NewWeapon; }
-
+	FORCEINLINE AWeapon* GetEquipWeapon() const { return EquipWeapon; }
+	FORCEINLINE void SetEquipWeapon(AWeapon* NewWeapon) { EquipWeapon = NewWeapon; }
+	
+	UPROPERTY(VisibleAnywhere, Category = "Weapon")
+	TArray<AWeapon*> Inventory;
 };

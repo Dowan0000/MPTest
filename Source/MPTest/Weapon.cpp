@@ -6,6 +6,7 @@
 #include "ShooterCharacter.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Kismet/GameplayStatics.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -46,6 +47,15 @@ void AWeapon::Tick(float DeltaTime)
 
 }
 
+void AWeapon::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AWeapon, ShootMontage);
+	DOREPLIFETIME(AWeapon, ShootEffect);
+}
+
+
 void AWeapon::BoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	Character = Cast<AShooterCharacter>(OtherActor);
@@ -54,12 +64,29 @@ void AWeapon::BoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 		const USkeletalMeshSocket* SocketName = Character->GetMesh()->GetSocketByName(FName("hand_r_socket"));
 		if (SocketName)
 		{
-			SocketName->AttachActor(this, Character->GetMesh());
-			SetOwner(Character);
-			Character->SetEquipWeapon(this);
+			if (Character->GetEquipWeapon())
+			{
+				Character->GetEquipWeapon()->GetMesh()->SetVisibility(false);
+				//widget
 
-			Box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-			Box->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+				SocketName->AttachActor(this, Character->GetMesh());
+				SetOwner(Character);
+				Character->SetEquipWeapon(this);
+				Character->Inventory.Add(this);
+			
+			}
+			else
+			{
+				SocketName->AttachActor(this, Character->GetMesh());
+				SetOwner(Character);
+				Character->SetEquipWeapon(this);
+				Character->Inventory.Add(this);
+
+				Box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+				Box->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+			}
+
+			
 		}
 	}
 }
@@ -83,4 +110,6 @@ void AWeapon::PressShoot_Implementation()
 			}
 		}
 	}
+
+	
 }
