@@ -73,7 +73,9 @@ void AWeapon::BoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 				SetOwner(Character);
 				Character->SetEquipWeapon(this);
 				Character->Inventory.Add(this);
-			
+				
+				Box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+				Box->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 			}
 			else
 			{
@@ -85,8 +87,6 @@ void AWeapon::BoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 				Box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 				Box->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 			}
-
-			
 		}
 	}
 }
@@ -110,6 +110,4 @@ void AWeapon::PressShoot_Implementation()
 			}
 		}
 	}
-
-	
 }

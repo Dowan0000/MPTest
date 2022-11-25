@@ -44,13 +44,13 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly,Category = "Weapon", meta = (AllowPrivateAccess = "true"))
 	class AWeapon* EquipWeapon;
 
-
 	
-
 public:	
 	FORCEINLINE AWeapon* GetEquipWeapon() const { return EquipWeapon; }
 	FORCEINLINE void SetEquipWeapon(AWeapon* NewWeapon) { EquipWeapon = NewWeapon; }
 	
-	UPROPERTY(VisibleAnywhere, Category = "Weapon")
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 	TArray<AWeapon*> Inventory;
+	
 };

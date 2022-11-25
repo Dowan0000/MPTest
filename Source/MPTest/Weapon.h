@@ -34,7 +34,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
 	class USkeletalMeshComponent* Mesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class AShooterCharacter* Character;
 
 	UPROPERTY(Replicated, EditAnywhere, BlueprintReadOnly, Category = "Shoot")
