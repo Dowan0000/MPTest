@@ -53,6 +53,7 @@ void AWeapon::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetim
 
 	DOREPLIFETIME(AWeapon, ShootMontage);
 	DOREPLIFETIME(AWeapon, ShootEffect);
+	DOREPLIFETIME(AWeapon, ItemType);
 }
 
 

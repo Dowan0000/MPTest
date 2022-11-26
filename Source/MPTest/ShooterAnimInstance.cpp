@@ -31,6 +31,10 @@ void UShooterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		
 		FString RotationMesagge = FString::Printf(TEXT("Direction : %f"), Direction);
 		GEngine->AddOnScreenDebugMessage(1, 0.f, FColor::Red, RotationMesagge);
+	
+		if (Character->GetEquipWeapon())
+		{
+			ItemType = Character->GetEquipWeapon()->GetItemType();
+		}
 	}
-
 }

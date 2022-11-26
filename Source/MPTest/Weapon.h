@@ -7,6 +7,17 @@
 #include "WeaponInterface.h"
 #include "Weapon.generated.h"
 
+UENUM(BlueprintType)
+enum class EItemType : uint8
+{
+	EIT_Pistol UMETA(DisplayName = "Pistol"),
+	EIT_Rifle UMETA(DisplayName = "Rifle"),
+	EIT_Sniper UMETA(DisplayName = "Sniper"),
+	EIT_Bazooka UMETA(DisplayName = "Bazooka"),
+
+	EIT_Default UMETA(DisplayName = "Default"),
+};
+
 UCLASS()
 class MPTEST_API AWeapon : public AActor, public IWeaponInterface
 {
@@ -43,7 +54,12 @@ protected:
 	UPROPERTY(Replicated, EditAnywhere, BlueprintReadOnly, Category = "Shoot")
 	class UParticleSystem* ShootEffect;
 
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadOnly, Category = "Item")
+	EItemType ItemType;
+
 public:	
 	FORCEINLINE USkeletalMeshComponent* GetMesh() const { return Mesh; }
+	
+	FORCEINLINE EItemType GetItemType() const { return ItemType; }
 
 };
