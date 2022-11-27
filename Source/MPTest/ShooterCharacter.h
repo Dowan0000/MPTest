@@ -34,6 +34,14 @@ protected:
 	UFUNCTION(NetMulticast, Reliable)
 	void ResPressShoot();
 
+	void PressPickUpItem();
+
+	UFUNCTION(Server, Reliable)
+	void ReqPressPickUpItem();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void ResPressPickUpItem();
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* SpringArm;
@@ -41,14 +49,17 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* Camera;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly,Category = "Weapon", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
 	class AWeapon* EquipWeapon;
 
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
+	AWeapon* OverlappingWeapon;
 	
 public:	
 	FORCEINLINE AWeapon* GetEquipWeapon() const { return EquipWeapon; }
 	FORCEINLINE void SetEquipWeapon(AWeapon* NewWeapon) { EquipWeapon = NewWeapon; }
 	
+	FORCEINLINE void SetOverlappingWeapon(AWeapon* NewWeapon) { OverlappingWeapon = NewWeapon; }
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 	TArray<AWeapon*> Inventory;

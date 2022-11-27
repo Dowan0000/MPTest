@@ -34,9 +34,16 @@ protected:
 	UFUNCTION()
 	void BoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	
+	UFUNCTION()
+	void BoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void PressShoot();
 	virtual void PressShoot_Implementation() override;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void PressPickUpItem();
+	virtual void PressPickUpItem_Implementation() override;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")

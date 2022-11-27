@@ -26,4 +26,8 @@ public:
 	void PressShoot();
 	virtual void PressShoot_Implementation() {};
 
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void PressPickUpItem();
+	virtual void PressPickUpItem_Implementation() {};
+
 };

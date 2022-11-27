@@ -33,6 +33,15 @@ void AShooterCharacter::Tick(float DeltaTime)
 
 }
 
+void AShooterCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AShooterCharacter, EquipWeapon);
+	DOREPLIFETIME(AShooterCharacter, OverlappingWeapon);
+	
+}
+
 void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -43,6 +52,7 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAxis(TEXT("LookRight"), this, &AShooterCharacter::LookRight);
 	
 	PlayerInputComponent->BindAction(TEXT("Shoot"), EInputEvent::IE_Pressed, this, &AShooterCharacter::PressShoot);
+	PlayerInputComponent->BindAction(TEXT("PickUpItem"), EInputEvent::IE_Pressed, this, &AShooterCharacter::PressPickUpItem);
 
 }
 
@@ -94,6 +104,28 @@ void AShooterCharacter::ResPressShoot_Implementation()
 		if (Interface)
 		{
 			Interface->Execute_PressShoot(EquipWeapon);
+		}
+	}
+}
+
+void AShooterCharacter::PressPickUpItem()
+{
+	ReqPressPickUpItem();
+}
+
+void AShooterCharacter::ReqPressPickUpItem_Implementation()
+{
+	ResPressPickUpItem();
+}
+
+void AShooterCharacter::ResPressPickUpItem_Implementation()
+{
+	if (OverlappingWeapon)
+	{
+		IWeaponInterface* Interface = Cast<IWeaponInterface>(OverlappingWeapon);
+		if (Interface)
+		{
+			Interface->Execute_PressPickUpItem(OverlappingWeapon);
 		}
 	}
 }
