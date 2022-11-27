@@ -8,7 +8,9 @@
 #include "Net/UnrealNetwork.h"
 #include "Weapon.h"
 
-AShooterCharacter::AShooterCharacter()
+AShooterCharacter::AShooterCharacter() : 
+	NumberOfWeapon(0), CurWeaponNumber(0)
+
 {
  	PrimaryActorTick.bCanEverTick = true;
 
@@ -52,7 +54,10 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAxis(TEXT("LookRight"), this, &AShooterCharacter::LookRight);
 	
 	PlayerInputComponent->BindAction(TEXT("Shoot"), EInputEvent::IE_Pressed, this, &AShooterCharacter::PressShoot);
+	
 	PlayerInputComponent->BindAction(TEXT("PickUpItem"), EInputEvent::IE_Pressed, this, &AShooterCharacter::PressPickUpItem);
+
+	PlayerInputComponent->BindAction(TEXT("ChangeWeapon"), EInputEvent::IE_Pressed, this, &AShooterCharacter::PressChangeWeapon);
 
 }
 
@@ -127,5 +132,39 @@ void AShooterCharacter::ResPressPickUpItem_Implementation()
 		{
 			Interface->Execute_PressPickUpItem(OverlappingWeapon);
 		}
+	}
+}
+
+void AShooterCharacter::PressChangeWeapon()
+{
+	ReqPressChangeWeapon();
+}
+
+void AShooterCharacter::ReqPressChangeWeapon_Implementation()
+{
+	ResPressChangeWeapon();
+}
+
+void AShooterCharacter::ResPressChangeWeapon_Implementation()
+{
+	if (CurWeaponNumber == NumberOfWeapon)
+	{
+		if (EquipWeapon == nullptr) return;
+
+		EquipWeapon->GetMesh()->SetVisibility(false);
+
+		EquipWeapon = Inventory[0];
+		EquipWeapon->GetMesh()->SetVisibility(true);
+		CurWeaponNumber = 1;
+	}
+	else
+	{
+		if (EquipWeapon == nullptr) return;
+
+		EquipWeapon->GetMesh()->SetVisibility(false);
+
+		EquipWeapon = Inventory[CurWeaponNumber];
+		EquipWeapon->GetMesh()->SetVisibility(true);
+		CurWeaponNumber++;
 	}
 }

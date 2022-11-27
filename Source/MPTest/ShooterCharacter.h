@@ -42,6 +42,14 @@ protected:
 	UFUNCTION(NetMulticast, Reliable)
 	void ResPressPickUpItem();
 
+	void PressChangeWeapon();
+
+	UFUNCTION(Server, Reliable)
+	void ReqPressChangeWeapon();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void ResPressChangeWeapon();
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* SpringArm;
@@ -55,11 +63,22 @@ private:
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
 	AWeapon* OverlappingWeapon;
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
+	int NumberOfWeapon;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
+	int CurWeaponNumber;
+
 public:	
 	FORCEINLINE AWeapon* GetEquipWeapon() const { return EquipWeapon; }
 	FORCEINLINE void SetEquipWeapon(AWeapon* NewWeapon) { EquipWeapon = NewWeapon; }
 	
 	FORCEINLINE void SetOverlappingWeapon(AWeapon* NewWeapon) { OverlappingWeapon = NewWeapon; }
+
+	FORCEINLINE int GetNumberOfWeapon() const { return NumberOfWeapon; }
+	FORCEINLINE void SetNumberOfWeapon() { NumberOfWeapon++; }
+	FORCEINLINE void SetCurWeaponNumber(int NewWeaponNumber) { CurWeaponNumber = NewWeaponNumber; }
+
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 	TArray<AWeapon*> Inventory;

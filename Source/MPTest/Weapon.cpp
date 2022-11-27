@@ -115,6 +115,8 @@ void AWeapon::PressPickUpItem_Implementation()
 				SetOwner(Character);
 				Character->SetEquipWeapon(this);
 				Character->Inventory.Add(this);
+				Character->SetNumberOfWeapon();
+				Character->SetCurWeaponNumber(Character->GetNumberOfWeapon());
 
 				Box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 				Box->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
@@ -125,6 +127,8 @@ void AWeapon::PressPickUpItem_Implementation()
 				SetOwner(Character);
 				Character->SetEquipWeapon(this);
 				Character->Inventory.Add(this);
+				Character->SetNumberOfWeapon();
+				Character->SetCurWeaponNumber(Character->GetNumberOfWeapon());
 
 				Box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 				Box->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
