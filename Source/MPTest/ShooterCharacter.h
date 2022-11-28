@@ -50,6 +50,14 @@ protected:
 	UFUNCTION(NetMulticast, Reliable)
 	void ResPressChangeWeapon();
 
+	void PressDropWeapon();
+
+	UFUNCTION(Server, Reliable)
+	void ReqPressDropWeapon();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void ResPressDropWeapon();
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* SpringArm;

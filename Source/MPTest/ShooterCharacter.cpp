@@ -59,6 +59,8 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 	PlayerInputComponent->BindAction(TEXT("ChangeWeapon"), EInputEvent::IE_Pressed, this, &AShooterCharacter::PressChangeWeapon);
 
+	PlayerInputComponent->BindAction(TEXT("DropWeapon"), EInputEvent::IE_Pressed, this, &AShooterCharacter::PressDropWeapon);
+
 }
 
 void AShooterCharacter::UpDown(float Value)
@@ -151,20 +153,58 @@ void AShooterCharacter::ResPressChangeWeapon_Implementation()
 	{
 		if (EquipWeapon == nullptr) return;
 
-		EquipWeapon->GetMesh()->SetVisibility(false);
+		EquipWeapon->SetItemState(EItemState::EIS_NonEquipped);
 
 		EquipWeapon = Inventory[0];
-		EquipWeapon->GetMesh()->SetVisibility(true);
+		EquipWeapon->SetItemState(EItemState::EIS_Equipped);
 		CurWeaponNumber = 1;
 	}
 	else
 	{
 		if (EquipWeapon == nullptr) return;
 
-		EquipWeapon->GetMesh()->SetVisibility(false);
+		EquipWeapon->SetItemState(EItemState::EIS_NonEquipped);
 
 		EquipWeapon = Inventory[CurWeaponNumber];
-		EquipWeapon->GetMesh()->SetVisibility(true);
+		EquipWeapon->SetItemState(EItemState::EIS_Equipped);
 		CurWeaponNumber++;
+	}
+}
+
+void AShooterCharacter::PressDropWeapon()
+{
+	ReqPressDropWeapon();
+}
+
+void AShooterCharacter::ReqPressDropWeapon_Implementation()
+{
+	ResPressDropWeapon();
+}
+
+void AShooterCharacter::ResPressDropWeapon_Implementation()
+{
+	if (Inventory.Num() >= 2)
+	{
+		Inventory[CurWeaponNumber - 1]->SetItemState(EItemState::EIS_Dropped);
+		Inventory[CurWeaponNumber - 1]->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+		Inventory[CurWeaponNumber - 1]->SetOwner(nullptr);
+
+		Inventory.RemoveAt(CurWeaponNumber - 1);
+
+		if (CurWeaponNumber <= Inventory.Num() - 1)
+		{
+			EquipWeapon = Inventory[CurWeaponNumber - 1];
+			EquipWeapon->SetItemState(EItemState::EIS_Equipped);
+
+			NumberOfWeapon--;
+		}
+		else
+		{
+			EquipWeapon = Inventory[0];
+			EquipWeapon->SetItemState(EItemState::EIS_Equipped);
+
+			NumberOfWeapon--;
+			CurWeaponNumber = 1;
+		}
 	}
 }

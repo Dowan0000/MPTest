@@ -18,6 +18,16 @@ enum class EItemType : uint8
 	EIT_Default UMETA(DisplayName = "Default"),
 };
 
+UENUM(BlueprintType)
+enum class EItemState : uint8
+{
+	EIS_Dropped UMETA(DisplayName = "Dropped"),
+	EIS_Equipped UMETA(DisplayName = "Equipped"),
+	EIS_NonEquipped UMETA(DisplayName = "NonEquipped"),
+
+	EIS_Default UMETA(DisplayName = "Default"),
+};
+
 UCLASS()
 class MPTEST_API AWeapon : public AActor, public IWeaponInterface
 {
@@ -64,9 +74,13 @@ protected:
 	UPROPERTY(Replicated, EditAnywhere, BlueprintReadOnly, Category = "Item")
 	EItemType ItemType;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item")
+	EItemState ItemState;
+
 public:	
 	FORCEINLINE USkeletalMeshComponent* GetMesh() const { return Mesh; }
 	
 	FORCEINLINE EItemType GetItemType() const { return ItemType; }
 
+	void SetItemState(EItemState NewItemState);
 };
