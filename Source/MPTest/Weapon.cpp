@@ -7,6 +7,7 @@
 #include "Engine/SkeletalMeshSocket.h"
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -98,8 +99,45 @@ void AWeapon::PressShoot_Implementation()
 		}
 	}
 
+	ReqApplyDamage();
+}
 
+void AWeapon::ReqApplyDamage_Implementation()
+{
+	FVector2D ViewportSize;
+	GEngine->GameViewport->GetViewportSize(ViewportSize);
 
+	ViewportSize.X /= 2;
+	ViewportSize.Y /= 2;
+
+	FVector WorldPosition;
+	FVector WorldDirection;
+
+	if (Character)
+	{
+		UGameplayStatics::DeprojectScreenToWorld(
+			UGameplayStatics::GetPlayerController(Character, 0),
+			ViewportSize, WorldPosition, WorldDirection);
+	}
+
+	FVector Start = WorldPosition;
+	FVector End = WorldPosition + WorldDirection * 50'000.f;
+
+	FHitResult Hit;
+	GetWorld()->LineTraceSingleByChannel(Hit, Start, End,
+		ECollisionChannel::ECC_Camera);
+
+	if (Hit.Actor.IsValid())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Hit.Actor.IsValid"));
+		FDamageEvent Damage;
+		Hit.Actor->TakeDamage(10.f, Damage,
+			Character->GetController(), this);
+		
+	}
+
+	//DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2.f);
+	
 }
 
 void AWeapon::PressPickUpItem_Implementation()

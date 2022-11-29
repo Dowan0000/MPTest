@@ -9,7 +9,8 @@
 #include "Weapon.h"
 
 AShooterCharacter::AShooterCharacter() : 
-	NumberOfWeapon(0), CurWeaponNumber(0)
+	NumberOfWeapon(0), CurWeaponNumber(0),
+	Health(100), MaxHealth(100)
 
 {
  	PrimaryActorTick.bCanEverTick = true;
@@ -41,7 +42,8 @@ void AShooterCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& 
 
 	DOREPLIFETIME(AShooterCharacter, EquipWeapon);
 	DOREPLIFETIME(AShooterCharacter, OverlappingWeapon);
-	
+	DOREPLIFETIME(AShooterCharacter, Health);
+	DOREPLIFETIME(AShooterCharacter, MaxHealth);
 }
 
 void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -61,6 +63,17 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 	PlayerInputComponent->BindAction(TEXT("DropWeapon"), EInputEvent::IE_Pressed, this, &AShooterCharacter::PressDropWeapon);
 
+}
+
+float AShooterCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float AppliedDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	UE_LOG(LogTemp, Warning, TEXT("TakeDamage, Applied Damage : %f"), AppliedDamage);
+		
+	Health = Health - AppliedDamage;
+
+	return AppliedDamage;
 }
 
 void AShooterCharacter::UpDown(float Value)

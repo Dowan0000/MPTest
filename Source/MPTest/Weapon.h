@@ -51,10 +51,14 @@ protected:
 	void PressShoot();
 	virtual void PressShoot_Implementation() override;
 
+	UFUNCTION(Server, Reliable)
+	void ReqApplyDamage();
+
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void PressPickUpItem();
 	virtual void PressPickUpItem_Implementation() override;
 
+	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
 	class UBoxComponent* Box;
