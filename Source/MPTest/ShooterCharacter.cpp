@@ -7,6 +7,7 @@
 #include "WeaponInterface.h"
 #include "Net/UnrealNetwork.h"
 #include "Weapon.h"
+#include "ShooterHUD.h"
 
 AShooterCharacter::AShooterCharacter() : 
 	NumberOfWeapon(0), CurWeaponNumber(0),
@@ -43,7 +44,6 @@ void AShooterCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& 
 	DOREPLIFETIME(AShooterCharacter, EquipWeapon);
 	DOREPLIFETIME(AShooterCharacter, OverlappingWeapon);
 	DOREPLIFETIME(AShooterCharacter, Health);
-	DOREPLIFETIME(AShooterCharacter, MaxHealth);
 }
 
 void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -69,11 +69,15 @@ float AShooterCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Dama
 {
 	float AppliedDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
-	UE_LOG(LogTemp, Warning, TEXT("TakeDamage, Applied Damage : %f"), AppliedDamage);
-		
-	Health = Health - AppliedDamage;
+	Health -= AppliedDamage;
+	OnRep_Health();
 
 	return AppliedDamage;
+}
+
+void AShooterCharacter::OnRep_Health()
+{
+	
 }
 
 void AShooterCharacter::UpDown(float Value)
@@ -109,11 +113,13 @@ void AShooterCharacter::LookRight(float Value)
 void AShooterCharacter::PressShoot()
 {
 	ReqPressShoot();
+	
 }
 
 void AShooterCharacter::ReqPressShoot_Implementation()
 {
 	ResPressShoot();
+	
 }
 
 void AShooterCharacter::ResPressShoot_Implementation()

@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "ShooterCharacter.generated.h"
 
+
 UCLASS()
 class MPTEST_API AShooterCharacter : public ACharacter
 {
@@ -60,6 +61,9 @@ protected:
 	UFUNCTION(NetMulticast, Reliable)
 	void ResPressDropWeapon();
 
+	UFUNCTION()
+	void OnRep_Health();
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* SpringArm;
@@ -79,10 +83,10 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
 	int CurWeaponNumber;
 
-	UPROPERTY(Replicated, EditAnywhere, BlueprintReadOnly, Category = "Health", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(ReplicatedUsing = OnRep_Health, EditAnywhere, BlueprintReadOnly, Category = "Health", meta = (AllowPrivateAccess = "true"))
 	float Health;
 
-	UPROPERTY(Replicated, EditAnywhere, BlueprintReadOnly, Category = "Health", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Health", meta = (AllowPrivateAccess = "true"))
 	float MaxHealth;
 
 public:	
@@ -95,6 +99,7 @@ public:
 	FORCEINLINE void SetNumberOfWeapon() { NumberOfWeapon++; }
 	FORCEINLINE void SetCurWeaponNumber(int NewWeaponNumber) { CurWeaponNumber = NewWeaponNumber; }
 
+	FORCEINLINE float GetMaxHealth() const { return MaxHealth; }
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 	TArray<AWeapon*> Inventory;

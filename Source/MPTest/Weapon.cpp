@@ -22,7 +22,7 @@ AWeapon::AWeapon()
 	
 	RootComponent = Box;
 	Mesh->SetupAttachment(RootComponent);
-
+	
 	Box->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	Box->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 
@@ -39,6 +39,7 @@ void AWeapon::BeginPlay()
 	
 	Box->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::BoxBeginOverlap);
 	Box->OnComponentEndOverlap.AddDynamic(this, &AWeapon::BoxEndOverlap);
+
 }
 
 // Called every frame
@@ -91,19 +92,15 @@ void AWeapon::PressShoot_Implementation()
 		const USkeletalMeshSocket* SocketName = Mesh->GetSocketByName(FName("MuzzleFlash"));
 		if (SocketName)
 		{
-			const FTransform SocketTreansform = SocketName->GetSocketTransform(Mesh);
+			const FTransform SocketTransform = SocketName->GetSocketTransform(Mesh);
 			if (ShootEffect)
 			{
-				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShootEffect, SocketTreansform);
+				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShootEffect, SocketTransform);
 			}
 		}
 	}
 
-	ReqApplyDamage();
-}
-
-void AWeapon::ReqApplyDamage_Implementation()
-{
+	// LineTrace
 	FVector2D ViewportSize;
 	GEngine->GameViewport->GetViewportSize(ViewportSize);
 
@@ -113,30 +110,57 @@ void AWeapon::ReqApplyDamage_Implementation()
 	FVector WorldPosition;
 	FVector WorldDirection;
 
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	if (PlayerController == Character->GetController())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayerController == Character->GetController()"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("FAIL !!! PlayerController != Character->GetController()"));
+		return;
+	}
+
 	if (Character)
 	{
 		UGameplayStatics::DeprojectScreenToWorld(
-			UGameplayStatics::GetPlayerController(Character, 0),
-			ViewportSize, WorldPosition, WorldDirection);
+			PlayerController, ViewportSize,
+			WorldPosition, WorldDirection);
 	}
 
-	FVector Start = WorldPosition;
-	FVector End = WorldPosition + WorldDirection * 50'000.f;
+	FVector Start;
+	FVector End;
 
+	const USkeletalMeshSocket* SocketName = Mesh->GetSocketByName(FName("MuzzleFlash"));
+	if (SocketName)
+	{
+		const FTransform SocketTransform = SocketName->GetSocketTransform(Mesh);
+		Start = SocketTransform.GetLocation();
+	}
+	End = WorldPosition + WorldDirection * 50'000.f;
+	
+	ReqShoot(Start, End);
+}
+
+void AWeapon::ReqShoot_Implementation(FVector Start, FVector End)
+{
 	FHitResult Hit;
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+	Params.AddIgnoredActor(GetOwner());
+
 	GetWorld()->LineTraceSingleByChannel(Hit, Start, End,
-		ECollisionChannel::ECC_Camera);
+		ECollisionChannel::ECC_Camera, Params);
 
 	if (Hit.Actor.IsValid())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Hit.Actor.IsValid"));
+		UE_LOG(LogTemp, Warning, TEXT("Hit.Actor.IsValid : %s"), *Hit.Actor->GetName());
 		FDamageEvent Damage;
 		Hit.Actor->TakeDamage(10.f, Damage,
 			Character->GetController(), this);
-		
 	}
 
-	//DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2.f);
+	DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 5.f);
 	
 }
 

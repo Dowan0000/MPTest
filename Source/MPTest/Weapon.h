@@ -52,7 +52,7 @@ protected:
 	virtual void PressShoot_Implementation() override;
 
 	UFUNCTION(Server, Reliable)
-	void ReqApplyDamage();
+	void ReqShoot(FVector Start, FVector End);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void PressPickUpItem();
@@ -80,6 +80,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item")
 	EItemState ItemState;
+
 
 public:	
 	FORCEINLINE USkeletalMeshComponent* GetMesh() const { return Mesh; }
