@@ -16,5 +16,24 @@ void AShooterHUD::BeginPlay()
 		}
 	}
 
-	
+	BindHealthDele();
+}
+
+void AShooterHUD::BindHealthDele()
+{
+	Character = Cast<AShooterCharacter>(GetWorld()->GetFirstPlayerController()->GetCharacter());
+	if (Character)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Character Cast in HUD"));
+		Character->UpdateHealthDele.AddUFunction(this, FName("SetHealth"));
+		SetHealth(Character->GetMaxHealth());
+		return;
+	}
+
+	GetWorldTimerManager().SetTimer(BindTimer, this, &AShooterHUD::BindHealthDele, 0.1f);
+}
+
+void AShooterHUD::SetHealth_Implementation(float HealthRate)
+{
+
 }

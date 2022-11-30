@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "ShooterCharacter.generated.h"
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FDele_Multi_UpdateHP_OneParam, float);
 
 UCLASS()
 class MPTEST_API AShooterCharacter : public ACharacter
@@ -104,4 +105,5 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 	TArray<AWeapon*> Inventory;
 	
+	FDele_Multi_UpdateHP_OneParam UpdateHealthDele;
 };

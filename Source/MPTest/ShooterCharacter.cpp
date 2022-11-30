@@ -77,7 +77,9 @@ float AShooterCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Dama
 
 void AShooterCharacter::OnRep_Health()
 {
-	
+	// delegate
+	if (UpdateHealthDele.IsBound())
+		UpdateHealthDele.Broadcast(Health / MaxHealth);
 }
 
 void AShooterCharacter::UpDown(float Value)

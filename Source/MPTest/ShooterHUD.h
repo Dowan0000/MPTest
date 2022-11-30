@@ -17,7 +17,7 @@ class MPTEST_API AShooterHUD : public AHUD
 protected:
 	virtual void BeginPlay() override;
 	
-	
+	void BindHealthDele();
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -26,12 +26,13 @@ private:
 	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	UUserWidget* HUDWidget;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class AShooterCharacter* Character;
 
 	FTimerHandle BindTimer;
 
 public:
-	
+	UFUNCTION(BlueprintNativeEvent)
+	void SetHealth(float HealthRate);
 
 };
