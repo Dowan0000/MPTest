@@ -20,15 +20,19 @@ AWeapon::AWeapon()
 	Box = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
 	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
 	
-	RootComponent = Box;
-	Mesh->SetupAttachment(RootComponent);
-	
-	Box->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	Box->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+	SetRootComponent(Mesh);
+	Box->SetupAttachment(RootComponent);
 
+	Mesh->SetSimulatePhysics(true);
+	
+	Mesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	Mesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
 	Mesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
-	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	Mesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_PhysicsBody, ECollisionResponse::ECR_Ignore);
+	
+	Box->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	Box->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	Box->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 
 }
 
@@ -173,6 +177,8 @@ void AWeapon::PressPickUpItem_Implementation()
 		{
 			if (Character->GetEquipWeapon())
 			{
+				SetItemState(EItemState::EIS_Equipped);
+
 				Character->GetEquipWeapon()->GetMesh()->SetVisibility(false);
 				//widget
 
@@ -183,10 +189,12 @@ void AWeapon::PressPickUpItem_Implementation()
 				Character->SetNumberOfWeapon();
 				Character->SetCurWeaponNumber(Character->GetNumberOfWeapon());
 
-				SetItemState(EItemState::EIS_Equipped);
+				
 			}
 			else
 			{
+				SetItemState(EItemState::EIS_Equipped);
+
 				SocketName->AttachActor(this, Character->GetMesh());
 				SetOwner(Character);
 				Character->SetEquipWeapon(this);
@@ -194,7 +202,6 @@ void AWeapon::PressPickUpItem_Implementation()
 				Character->SetNumberOfWeapon();
 				Character->SetCurWeaponNumber(Character->GetNumberOfWeapon());
 
-				SetItemState(EItemState::EIS_Equipped);
 			}
 		}
 	}
@@ -205,39 +212,43 @@ void AWeapon::SetItemState(EItemState NewItemState)
 	switch (NewItemState)
 	{
 	case EItemState::EIS_Dropped:
-		Box->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-		Box->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+		Mesh->SetSimulatePhysics(true);
+		Mesh->SetVisibility(true);
 
+		Mesh->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 		Mesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
 		Mesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
-		Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		Mesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_PhysicsBody, ECollisionResponse::ECR_Ignore);
 
-		Box->SetSimulatePhysics(true);
-		Mesh->SetVisibility(true);
+		Box->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		Box->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		Box->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 
 		break;
 	case EItemState::EIS_Equipped:
-		Box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		Box->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
-
-		Mesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-		Mesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
-		Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
-		Box->SetSimulatePhysics(false);
+		Mesh->SetSimulatePhysics(false);
 		Mesh->SetVisibility(true);
+
+		Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		Mesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+		Mesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+		Mesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_PhysicsBody, ECollisionResponse::ECR_Ignore);
+
+		Box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		Box->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 
 		break;
 	case EItemState::EIS_NonEquipped:
-		Box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		Box->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
-
-		Mesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-		Mesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
-		Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
-		Box->SetSimulatePhysics(false);
+		Mesh->SetSimulatePhysics(false);
 		Mesh->SetVisibility(false);
+
+		Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		Mesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+		Mesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+		Mesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_PhysicsBody, ECollisionResponse::ECR_Ignore);
+
+		Box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		Box->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 
 		break;
 	}
