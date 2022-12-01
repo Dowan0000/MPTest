@@ -14,8 +14,6 @@ enum class EItemType : uint8
 	EIT_Rifle UMETA(DisplayName = "Rifle"),
 	EIT_Sniper UMETA(DisplayName = "Sniper"),
 	EIT_Bazooka UMETA(DisplayName = "Bazooka"),
-
-	EIT_Default UMETA(DisplayName = "Default"),
 };
 
 UENUM(BlueprintType)
@@ -24,8 +22,6 @@ enum class EItemState : uint8
 	EIS_Dropped UMETA(DisplayName = "Dropped"),
 	EIS_Equipped UMETA(DisplayName = "Equipped"),
 	EIS_NonEquipped UMETA(DisplayName = "NonEquipped"),
-
-	EIS_Default UMETA(DisplayName = "Default"),
 };
 
 UCLASS()
@@ -80,12 +76,12 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item")
 	EItemState ItemState;
-
-
+	
 public:	
 	FORCEINLINE USkeletalMeshComponent* GetMesh() const { return Mesh; }
 	
 	FORCEINLINE EItemType GetItemType() const { return ItemType; }
 
 	void SetItemState(EItemState NewItemState);
+
 };

@@ -177,9 +177,10 @@ void AWeapon::PressPickUpItem_Implementation()
 		{
 			if (Character->GetEquipWeapon())
 			{
+				// 货肺 林款 局
 				SetItemState(EItemState::EIS_Equipped);
-
-				Character->GetEquipWeapon()->GetMesh()->SetVisibility(false);
+				// 甸绊 乐带 局
+				Character->GetEquipWeapon()->SetItemState(EItemState::EIS_NonEquipped);
 				//widget
 
 				SocketName->AttachActor(this, Character->GetMesh());
@@ -212,6 +213,7 @@ void AWeapon::SetItemState(EItemState NewItemState)
 	switch (NewItemState)
 	{
 	case EItemState::EIS_Dropped:
+		ItemState = EItemState::EIS_Dropped;
 		Mesh->SetSimulatePhysics(true);
 		Mesh->SetVisibility(true);
 
@@ -226,6 +228,7 @@ void AWeapon::SetItemState(EItemState NewItemState)
 
 		break;
 	case EItemState::EIS_Equipped:
+		ItemState = EItemState::EIS_Equipped;
 		Mesh->SetSimulatePhysics(false);
 		Mesh->SetVisibility(true);
 
@@ -239,6 +242,7 @@ void AWeapon::SetItemState(EItemState NewItemState)
 
 		break;
 	case EItemState::EIS_NonEquipped:
+		ItemState = EItemState::EIS_NonEquipped;
 		Mesh->SetSimulatePhysics(false);
 		Mesh->SetVisibility(false);
 
