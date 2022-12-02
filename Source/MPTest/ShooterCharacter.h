@@ -22,12 +22,13 @@ public:
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
+	void LookUp(float Value);
+
 protected:
 	virtual void BeginPlay() override;
 
 	void UpDown(float Value);
 	void LeftRight(float Value);
-	void LookUp(float Value);
 	void LookRight(float Value);
 
 	void PressShoot();

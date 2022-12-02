@@ -67,11 +67,20 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Crosshair", meta = (AllowPrivateAccess = "true"))
 	UTexture2D* CrossHairRight;
 
-	UPROPERTY(EditAnywhere, Category = "Crosshair", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, Category = "Crosshair", meta = (AllowPrivateAccess = "true"))
 	float DrawCrossHairXAxis;
 
-	UPROPERTY(EditAnywhere, Category = "Crosshair", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, Category = "Crosshair", meta = (AllowPrivateAccess = "true"))
 	float DrawCrossHairYAxis;
+
+	UPROPERTY(VisibleAnywhere, Category = "Crosshair", meta = (AllowPrivateAccess = "true"))
+	float CrosshairInAir;
+
+	UPROPERTY(VisibleAnywhere, Category = "Crosshair", meta = (AllowPrivateAccess = "true"))
+	float CrosshairIsShoot;
+
+	UPROPERTY(VisibleAnywhere, Category = "Crosshair", meta = (AllowPrivateAccess = "true"))
+	float LookUpWhenShoot;
 
 public:
 	UFUNCTION(BlueprintNativeEvent)
