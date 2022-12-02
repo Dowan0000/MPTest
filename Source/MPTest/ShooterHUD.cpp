@@ -56,11 +56,25 @@ void AShooterHUD::EITnECH()
 	{
 		if (Character->GetEquipWeapon()->GetItemType() == EItemType::EIT_Pistol)
 		{
-			SetCrossHairState(ECrossHair::ECH_Pistol);
+			if (Character->GetVelocity().Size())
+			{
+				SetCrossHairState(ECrossHair::ECH_PistolMove);
+			}
+			else
+			{
+				SetCrossHairState(ECrossHair::ECH_Pistol);
+			}
 		}
 		if (Character->GetEquipWeapon()->GetItemType() == EItemType::EIT_Rifle)
 		{
-			SetCrossHairState(ECrossHair::ECH_Rifle);
+			if (Character->GetVelocity().Size())
+			{
+				SetCrossHairState(ECrossHair::ECH_RifleMove);
+			}
+			else
+			{
+				SetCrossHairState(ECrossHair::ECH_Rifle);
+			}
 		}
 		//
 	}
@@ -69,25 +83,47 @@ void AShooterHUD::EITnECH()
 
 void AShooterHUD::SetCrossHairState(ECrossHair NewCrossHair)
 {
-	FVector2D ViewportSize;
-	GEngine->GameViewport->GetViewportSize(ViewportSize);
-
-	FVector2D ViewportCenter(ViewportSize.X / 2, ViewportSize.Y / 2);
-
-	float TextureWidth = CrossHairTop->GetSizeX() / 1.2f;
-	float TextureHeight = CrossHairTop->GetSizeY() / 1.2f;
-	FVector2D TextureDrawPoint;
-
 	switch (NewCrossHair)
 	{
 	case ECrossHair::ECH_Pistol:
-		TextureWidth;
-		TextureHeight;
-		/*TextureDrawPoint = FVector2D(ViewportCenter.X - TextureWidth / 2.f,
-			ViewportCenter.Y - TextureHeight / 2.f);*/
+		DrawCrossHairXAxis = 10.f;
+		DrawCrossHairYAxis = 10.f;
+
+		DrawCrossHair(CrossHairTop, 0.f, -DrawCrossHairYAxis);
+		DrawCrossHair(CrossHairBottom, 0.f, DrawCrossHairYAxis);
+		DrawCrossHair(CrossHairLeft, -DrawCrossHairXAxis, 0.f);
+		DrawCrossHair(CrossHairRight, DrawCrossHairXAxis, 0.f);
+
+		break;
+	case ECrossHair::ECH_PistolMove:
+		DrawCrossHairXAxis = 25.f;
+		DrawCrossHairYAxis = 25.f;
+
+		DrawCrossHair(CrossHairTop, 0.f, -DrawCrossHairYAxis);
+		DrawCrossHair(CrossHairBottom, 0.f, DrawCrossHairYAxis);
+		DrawCrossHair(CrossHairLeft, -DrawCrossHairXAxis, 0.f);
+		DrawCrossHair(CrossHairRight, DrawCrossHairXAxis, 0.f);
 
 		break;
 	case ECrossHair::ECH_Rifle:
+		DrawCrossHairXAxis = 0.f;
+		DrawCrossHairYAxis = 0.f;
+
+		DrawCrossHair(CrossHairTop, 0.f, -DrawCrossHairYAxis);
+		DrawCrossHair(CrossHairBottom, 0.f, DrawCrossHairYAxis);
+		DrawCrossHair(CrossHairLeft, -DrawCrossHairXAxis, 0.f);
+		DrawCrossHair(CrossHairRight, DrawCrossHairXAxis, 0.f);
+
+		break;
+	case ECrossHair::ECH_RifleMove:
+		DrawCrossHairXAxis = 15.f;
+		DrawCrossHairYAxis = 15.f;
+
+		DrawCrossHair(CrossHairTop, 0.f, -DrawCrossHairYAxis);
+		DrawCrossHair(CrossHairBottom, 0.f, DrawCrossHairYAxis);
+		DrawCrossHair(CrossHairLeft, -DrawCrossHairXAxis, 0.f);
+		DrawCrossHair(CrossHairRight, DrawCrossHairXAxis, 0.f);
+
 		break;
 	case ECrossHair::ECH_Sniper:
 		break;
@@ -95,13 +131,21 @@ void AShooterHUD::SetCrossHairState(ECrossHair NewCrossHair)
 		break;
 	}
 
-	DrawTexture(CrossHairTop, ViewportCenter.X, ViewportCenter.Y,
+}
+
+void AShooterHUD::DrawCrossHair(UTexture2D* Texture, float XAxis, float YAxis)
+{
+	FVector2D ViewportSize;
+	GEngine->GameViewport->GetViewportSize(ViewportSize);
+
+	FVector2D ViewportCenter(ViewportSize.X / 2, ViewportSize.Y / 2);
+
+	float TextureWidth = CrossHairTop->GetSizeX() / 1.2f;
+	float TextureHeight = CrossHairTop->GetSizeY() / 1.2f;
+
+	FVector2D TextureDrawPoint(ViewportCenter.X - TextureWidth / 2.f + XAxis,
+		ViewportCenter.Y - TextureHeight / 2.f + YAxis);
+
+	DrawTexture(Texture, TextureDrawPoint.X, TextureDrawPoint.Y,
 		TextureWidth, TextureHeight, 0.f, 0.f, 1.f, 1.f);
-	DrawTexture(CrossHairBottom, ViewportCenter.X, ViewportCenter.Y,
-		TextureWidth, TextureHeight, 0.f, 0.f, 1.f, 1.f);
-	DrawTexture(CrossHairLeft, ViewportCenter.X, ViewportCenter.Y,
-		TextureWidth, TextureHeight, 0.f, 0.f, 1.f, 1.f);
-	DrawTexture(CrossHairRight, ViewportCenter.X, ViewportCenter.Y,
-		TextureWidth, TextureHeight, 0.f, 0.f, 1.f, 1.f);
-	
 }

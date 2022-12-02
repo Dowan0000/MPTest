@@ -10,7 +10,11 @@ UENUM(BlueprintType)
 enum class ECrossHair : uint8
 {
 	ECH_Pistol UMETA(DisplayName = "CH_Pistol"),
+	ECH_PistolMove UMETA(DisplayName = "CH_PistolMove"),
+
 	ECH_Rifle UMETA(DisplayName = "CH_Rifle"),
+	ECH_RifleMove UMETA(DisplayName = "CH_RifleMove"),
+
 	ECH_Sniper UMETA(DisplayName = "CH_Sniper"),
 	ECH_Bazooka UMETA(DisplayName = "CH_Bazooka"),
 };
@@ -32,6 +36,8 @@ protected:
 	void BindHealthDele();
 
 	void EITnECH();
+
+	void DrawCrossHair(UTexture2D* Texture, float XAxis, float YAxis);
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -60,6 +66,12 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Crosshair", meta = (AllowPrivateAccess = "true"))
 	UTexture2D* CrossHairRight;
+
+	UPROPERTY(EditAnywhere, Category = "Crosshair", meta = (AllowPrivateAccess = "true"))
+	float DrawCrossHairXAxis;
+
+	UPROPERTY(EditAnywhere, Category = "Crosshair", meta = (AllowPrivateAccess = "true"))
+	float DrawCrossHairYAxis;
 
 public:
 	UFUNCTION(BlueprintNativeEvent)
