@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 #include "DrawDebugHelpers.h"
+#include "ShooterHUD.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -144,6 +145,15 @@ void AWeapon::PressShoot_Implementation()
 	End = WorldPosition + WorldDirection * 50'000.f;
 	
 	ReqShoot(Start, End);
+
+	// crosshair
+	bIsShoot = true;
+	GetWorldTimerManager().SetTimer(IsShootTimer, this, &AWeapon::IsShoot, 0.2f);
+}
+
+void AWeapon::IsShoot()
+{
+	bIsShoot = false;
 }
 
 void AWeapon::ReqShoot_Implementation(FVector Start, FVector End)

@@ -56,7 +56,7 @@ void AShooterHUD::EITnECH()
 	{
 		if (Character->GetEquipWeapon()->GetItemType() == EItemType::EIT_Pistol)
 		{
-			if (Character->GetVelocity().Size())
+			if (Character->GetVelocity().Size() || Character->GetEquipWeapon()->GetbIsShoot())
 			{
 				SetCrossHairState(ECrossHair::ECH_PistolMove);
 			}
@@ -67,7 +67,7 @@ void AShooterHUD::EITnECH()
 		}
 		if (Character->GetEquipWeapon()->GetItemType() == EItemType::EIT_Rifle)
 		{
-			if (Character->GetVelocity().Size())
+			if (Character->GetVelocity().Size() || Character->GetEquipWeapon()->GetbIsShoot())
 			{
 				SetCrossHairState(ECrossHair::ECH_RifleMove);
 			}

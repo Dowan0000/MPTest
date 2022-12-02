@@ -54,6 +54,7 @@ protected:
 	void PressPickUpItem();
 	virtual void PressPickUpItem_Implementation() override;
 
+	void IsShoot();
 	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
@@ -77,6 +78,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item")
 	EItemState ItemState;
 	
+	UPROPERTY(VisibleAnywhere, Category = "Shoot")
+	bool bIsShoot;
+
+	FTimerHandle IsShootTimer;
+
 public:	
 	FORCEINLINE USkeletalMeshComponent* GetMesh() const { return Mesh; }
 	
@@ -84,4 +90,5 @@ public:
 
 	void SetItemState(EItemState NewItemState);
 
+	FORCEINLINE bool GetbIsShoot() const { return bIsShoot; }
 };
