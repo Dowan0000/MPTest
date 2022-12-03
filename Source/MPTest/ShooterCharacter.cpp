@@ -9,10 +9,12 @@
 #include "Weapon.h"
 #include "Rifle.h"
 #include "ShooterHUD.h"
+#include "Kismet/GameplayStatics.h"
+#include "Blueprint/UserWidget.h"
 
 AShooterCharacter::AShooterCharacter() : 
 	NumberOfWeapon(0), CurWeaponNumber(0),
-	Health(100), MaxHealth(100)
+	Health(100), MaxHealth(100), ZoomControlValue(1.f)
 
 {
  	PrimaryActorTick.bCanEverTick = true;
@@ -23,6 +25,7 @@ AShooterCharacter::AShooterCharacter() :
 	SpringArm->SetupAttachment(RootComponent);
 	Camera->SetupAttachment(SpringArm);
 
+	SpringArm->TargetArmLength = 250.f;
 	SpringArm->bUsePawnControlRotation = true;
 }
 
@@ -67,6 +70,9 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 	PlayerInputComponent->BindAction(TEXT("DropWeapon"), EInputEvent::IE_Pressed, this, &AShooterCharacter::PressDropWeapon);
 
+	PlayerInputComponent->BindAction(TEXT("Zoom"), EInputEvent::IE_Pressed, this, &AShooterCharacter::PressZoom);
+	PlayerInputComponent->BindAction(TEXT("Zoom"), EInputEvent::IE_Released, this, &AShooterCharacter::ReleasedZoom);
+
 }
 
 float AShooterCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -108,12 +114,12 @@ void AShooterCharacter::LeftRight(float Value)
 
 void AShooterCharacter::LookUp(float Value)
 {
-	AddControllerPitchInput(Value);
+	AddControllerPitchInput(Value * ZoomControlValue);
 }
 
 void AShooterCharacter::LookRight(float Value)
 {
-	AddControllerYawInput(Value);
+	AddControllerYawInput(Value * ZoomControlValue);
 }
 
 void AShooterCharacter::PressShoot()
@@ -241,6 +247,38 @@ void AShooterCharacter::ResPressDropWeapon_Implementation()
 
 			NumberOfWeapon--;
 			CurWeaponNumber = 1;
+		}
+	}
+}
+
+void AShooterCharacter::PressZoom()
+{
+	if (EquipWeapon && EquipWeapon->GetItemType() == EItemType::EIT_Sniper)
+	{
+		if (ZoomWidgetClass)
+		{
+			ZoomWidget = CreateWidget<UUserWidget>(GetWorld(), ZoomWidgetClass);
+			if (ZoomWidget)
+			{
+				ZoomWidget->AddToViewport();
+				
+				SpringArm->TargetArmLength = -4000.f;
+				ZoomControlValue = 0.2f;
+			}
+		}
+	}
+}
+
+void AShooterCharacter::ReleasedZoom()
+{
+	if (EquipWeapon && EquipWeapon->GetItemType() == EItemType::EIT_Sniper)
+	{
+		if (ZoomWidgetClass && ZoomWidget)
+		{
+			ZoomWidget->RemoveFromParent();
+			
+			SpringArm->TargetArmLength = 250.f;
+			ZoomControlValue = 1.f;
 		}
 	}
 }

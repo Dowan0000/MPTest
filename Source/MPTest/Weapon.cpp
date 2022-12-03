@@ -11,7 +11,9 @@
 #include "ShooterHUD.h"
 
 // Sets default values
-AWeapon::AWeapon()
+AWeapon::AWeapon() : 
+	ItemType(EItemType::EIT_Pistol), ItemState(EItemState::EIS_Dropped),
+	bPressShoot(false), SocketName("Pistol_Socket")
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -94,10 +96,10 @@ void AWeapon::PressShoot_Implementation()
 			Character->PlayAnimMontage(ShootMontage);
 		}
 		
-		const USkeletalMeshSocket* SocketName = Mesh->GetSocketByName(FName("MuzzleFlash"));
-		if (SocketName)
+		const USkeletalMeshSocket* SkeletalSocketName = Mesh->GetSocketByName(FName("MuzzleFlash"));
+		if (SkeletalSocketName)
 		{
-			const FTransform SocketTransform = SocketName->GetSocketTransform(Mesh);
+			const FTransform SocketTransform = SkeletalSocketName->GetSocketTransform(Mesh);
 			if (ShootEffect)
 			{
 				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShootEffect, SocketTransform);
@@ -108,7 +110,7 @@ void AWeapon::PressShoot_Implementation()
 	// LineTrace
 	FVector2D ViewportSize;
 	GEngine->GameViewport->GetViewportSize(ViewportSize);
-
+	
 	ViewportSize.X /= 2;
 	ViewportSize.Y /= 2;
 
@@ -136,10 +138,10 @@ void AWeapon::PressShoot_Implementation()
 	FVector Start;
 	FVector End;
 
-	const USkeletalMeshSocket* SocketName = Mesh->GetSocketByName(FName("MuzzleFlash"));
-	if (SocketName)
+	const USkeletalMeshSocket* SkeletalSocketName = Mesh->GetSocketByName(FName("MuzzleFlash"));
+	if (SkeletalSocketName)
 	{
-		const FTransform SocketTransform = SocketName->GetSocketTransform(Mesh);
+		const FTransform SocketTransform = SkeletalSocketName->GetSocketTransform(Mesh);
 		Start = SocketTransform.GetLocation();
 	}
 	End = WorldPosition + WorldDirection * 50'000.f;
@@ -182,8 +184,8 @@ void AWeapon::PressPickUpItem_Implementation()
 {
 	if (Character)
 	{
-		const USkeletalMeshSocket* SocketName = Character->GetMesh()->GetSocketByName(FName("hand_r_socket"));
-		if (SocketName)
+		const USkeletalMeshSocket* SkeletalSocketName = Character->GetMesh()->GetSocketByName(SocketName);
+		if (SkeletalSocketName)
 		{
 			if (Character->GetEquipWeapon())
 			{
@@ -193,7 +195,7 @@ void AWeapon::PressPickUpItem_Implementation()
 				Character->GetEquipWeapon()->SetItemState(EItemState::EIS_NonEquipped);
 				//widget
 
-				SocketName->AttachActor(this, Character->GetMesh());
+				SkeletalSocketName->AttachActor(this, Character->GetMesh());
 				SetOwner(Character);
 				Character->SetEquipWeapon(this);
 				Character->Inventory.Add(this);
@@ -206,7 +208,7 @@ void AWeapon::PressPickUpItem_Implementation()
 			{
 				SetItemState(EItemState::EIS_Equipped);
 
-				SocketName->AttachActor(this, Character->GetMesh());
+				SkeletalSocketName->AttachActor(this, Character->GetMesh());
 				SetOwner(Character);
 				Character->SetEquipWeapon(this);
 				Character->Inventory.Add(this);

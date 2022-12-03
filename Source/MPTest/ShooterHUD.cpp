@@ -125,13 +125,13 @@ void AShooterHUD::SetCrossHairState(ECrossHair NewCrossHair)
 		// LookUp When Shoot
 		LookUpWhenShoot = FMath::FInterpTo(0, 2.5f, UGameplayStatics::GetWorldDeltaSeconds(GetWorld()), 20.f);
 		Character->LookUp(-LookUpWhenShoot);
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString::Printf(TEXT("%f"), LookUpWhenShoot));
+		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString::Printf(TEXT("%f"), LookUpWhenShoot));
 		
 		if (LookUpWhenShoot < 2.f)
 		{
 			LookUpWhenShoot = FMath::FInterpTo(0, -2.f, UGameplayStatics::GetWorldDeltaSeconds(GetWorld()), 20.f);
 			Character->LookUp(-LookUpWhenShoot);
-			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString::Printf(TEXT("%f"), LookUpWhenShoot));
+			//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString::Printf(TEXT("%f"), LookUpWhenShoot));
 		}
 	}
 	else

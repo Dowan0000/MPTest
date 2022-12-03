@@ -10,9 +10,12 @@ ARifle::ARifle()
 
 void ARifle::PressShoot_Implementation()
 {
+	if (bPressShoot == false) return;
+
 	Super::PressShoot_Implementation();
 
 	PressShootTimer();
+
 }
 
 void ARifle::PressShootTimer()

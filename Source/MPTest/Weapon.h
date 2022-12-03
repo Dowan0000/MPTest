@@ -86,6 +86,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Shoot")
 	bool bPressShoot;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SocketName", meta = (AllowPrivateAccess = "true"))
+	FName SocketName;
+
 public:	
 	FORCEINLINE USkeletalMeshComponent* GetMesh() const { return Mesh; }
 	
