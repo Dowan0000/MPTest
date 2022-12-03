@@ -148,7 +148,7 @@ void AWeapon::PressShoot_Implementation()
 
 	// crosshair
 	bIsShoot = true;
-	GetWorldTimerManager().SetTimer(IsShootTimer, this, &AWeapon::IsShoot, 0.2f);
+	GetWorldTimerManager().SetTimer(IsShootTimer, this, &AWeapon::IsShoot, 0.3f);
 }
 
 void AWeapon::IsShoot()

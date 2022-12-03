@@ -32,6 +32,7 @@ protected:
 	void LookRight(float Value);
 
 	void PressShoot();
+	void ReleasedShoot();
 
 	UFUNCTION(Server, Reliable)
 	void ReqPressShoot();

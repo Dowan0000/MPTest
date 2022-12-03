@@ -7,6 +7,7 @@
 #include "WeaponInterface.h"
 #include "Net/UnrealNetwork.h"
 #include "Weapon.h"
+#include "Rifle.h"
 #include "ShooterHUD.h"
 
 AShooterCharacter::AShooterCharacter() : 
@@ -58,7 +59,8 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
 
 	PlayerInputComponent->BindAction(TEXT("Shoot"), EInputEvent::IE_Pressed, this, &AShooterCharacter::PressShoot);
-	
+	PlayerInputComponent->BindAction(TEXT("Shoot"), EInputEvent::IE_Released, this, &AShooterCharacter::ReleasedShoot);
+
 	PlayerInputComponent->BindAction(TEXT("PickUpItem"), EInputEvent::IE_Pressed, this, &AShooterCharacter::PressPickUpItem);
 
 	PlayerInputComponent->BindAction(TEXT("ChangeWeapon"), EInputEvent::IE_Pressed, this, &AShooterCharacter::PressChangeWeapon);
@@ -116,14 +118,25 @@ void AShooterCharacter::LookRight(float Value)
 
 void AShooterCharacter::PressShoot()
 {
+	if (EquipWeapon)
+	{
+		EquipWeapon->SetPressShoot(true);
+	}
+
 	ReqPressShoot();
-	
+}
+
+void AShooterCharacter::ReleasedShoot()
+{
+	if (EquipWeapon)
+	{
+		EquipWeapon->SetPressShoot(false);
+	}
 }
 
 void AShooterCharacter::ReqPressShoot_Implementation()
 {
 	ResPressShoot();
-	
 }
 
 void AShooterCharacter::ResPressShoot_Implementation()

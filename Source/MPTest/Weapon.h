@@ -48,7 +48,7 @@ protected:
 	virtual void PressShoot_Implementation() override;
 
 	UFUNCTION(Server, Reliable)
-	void ReqShoot(FVector Start, FVector End);
+	virtual void ReqShoot(FVector Start, FVector End);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void PressPickUpItem();
@@ -83,6 +83,9 @@ protected:
 
 	FTimerHandle IsShootTimer;
 
+	UPROPERTY(VisibleAnywhere, Category = "Shoot")
+	bool bPressShoot;
+
 public:	
 	FORCEINLINE USkeletalMeshComponent* GetMesh() const { return Mesh; }
 	
@@ -91,4 +94,6 @@ public:
 	void SetItemState(EItemState NewItemState);
 
 	FORCEINLINE bool GetbIsShoot() const { return bIsShoot; }
+
+	FORCEINLINE void SetPressShoot(bool NewPress) { bPressShoot = NewPress; }
 };

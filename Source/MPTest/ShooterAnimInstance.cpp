@@ -29,8 +29,8 @@ void UShooterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		
 		Direction = UKismetMathLibrary::MakeRotFromX(Character->GetVelocity()).Yaw;
 		
-		FString RotationMesagge = FString::Printf(TEXT("Direction : %f"), Direction);
-		GEngine->AddOnScreenDebugMessage(1, 0.f, FColor::Red, RotationMesagge);
+		//FString RotationMesagge = FString::Printf(TEXT("Direction : %f"), Direction);
+		//GEngine->AddOnScreenDebugMessage(1, 0.f, FColor::Red, RotationMesagge);
 	
 		if (Character->GetEquipWeapon())
 		{

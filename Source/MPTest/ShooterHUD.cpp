@@ -107,6 +107,8 @@ void AShooterHUD::SetCrossHairState(ECrossHair NewCrossHair)
 
 	float CrosshairVelocity =  FMath::GetMappedRangeValueClamped(WalkSpeed, VelocityRange, VelocitySize) + 1;
 
+	//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString::Printf(TEXT("%f"), CrosshairVelocity));
+
 	// Crosshair When Jump
 	if (Character->GetCharacterMovement()->IsFalling())
 	{
@@ -121,12 +123,21 @@ void AShooterHUD::SetCrossHairState(ECrossHair NewCrossHair)
 	{
 		CrosshairIsShoot = FMath::FInterpTo(CrosshairIsShoot, 10.f, UGameplayStatics::GetWorldDeltaSeconds(GetWorld()), 10.f);
 		// LookUp When Shoot
-		LookUpWhenShoot = FMath::FInterpTo(LookUpWhenShoot, 0.3f, UGameplayStatics::GetWorldDeltaSeconds(GetWorld()), 30.f);
+		LookUpWhenShoot = FMath::FInterpTo(0, 2.5f, UGameplayStatics::GetWorldDeltaSeconds(GetWorld()), 20.f);
 		Character->LookUp(-LookUpWhenShoot);
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString::Printf(TEXT("%f"), LookUpWhenShoot));
+		
+		if (LookUpWhenShoot < 2.f)
+		{
+			LookUpWhenShoot = FMath::FInterpTo(0, -2.f, UGameplayStatics::GetWorldDeltaSeconds(GetWorld()), 20.f);
+			Character->LookUp(-LookUpWhenShoot);
+			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString::Printf(TEXT("%f"), LookUpWhenShoot));
+		}
 	}
 	else
 	{
 		CrosshairIsShoot = FMath::FInterpTo(CrosshairIsShoot, 0.f, UGameplayStatics::GetWorldDeltaSeconds(GetWorld()), 5.f);
+		LookUpWhenShoot = 0.f;
 	}
 
 	switch (NewCrossHair)
