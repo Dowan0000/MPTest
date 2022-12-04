@@ -40,18 +40,13 @@ void AShell::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetime
 
 void AShell::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	// 벽에 부딪혀도 터지게 수정
+	UE_LOG(LogTemp, Warning, TEXT("Shell Overlap!"));
 
-	AActor* actor = OtherActor;
-	if (actor)
-	{
-		//Damage
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitEffect, GetActorTransform());
 
-		if (HitEffect)
-		{
-			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitEffect, actor->GetTransform());
-		}
-	}
+	// Damage 처리
+
+	Destroy();
 }
 
 // Called every frame

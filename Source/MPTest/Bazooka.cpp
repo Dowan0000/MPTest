@@ -32,6 +32,7 @@ void ABazooka::PressShoot_Implementation()
 			}
 			if (Shell)
 			{
+				// 생성 위치 수정 필요
 				GetWorld()->SpawnActor<AActor>(Shell, SocketTransform);
 			}
 		}
