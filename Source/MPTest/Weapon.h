@@ -47,6 +47,10 @@ protected:
 	void PressShoot();
 	virtual void PressShoot_Implementation() override;
 
+	void LineTrace();
+
+	void IsShoot();
+
 	UFUNCTION(Server, Reliable)
 	virtual void ReqShoot(FVector Start, FVector End);
 
@@ -54,8 +58,6 @@ protected:
 	void PressPickUpItem();
 	virtual void PressPickUpItem_Implementation() override;
 
-	void IsShoot();
-	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
 	class UBoxComponent* Box;

@@ -107,10 +107,15 @@ void AWeapon::PressShoot_Implementation()
 		}
 	}
 
+	LineTrace();
+}
+
+void AWeapon::LineTrace()
+{
 	// LineTrace
 	FVector2D ViewportSize;
 	GEngine->GameViewport->GetViewportSize(ViewportSize);
-	
+
 	ViewportSize.X /= 2;
 	ViewportSize.Y /= 2;
 
@@ -145,7 +150,7 @@ void AWeapon::PressShoot_Implementation()
 		Start = SocketTransform.GetLocation();
 	}
 	End = WorldPosition + WorldDirection * 50'000.f;
-	
+
 	ReqShoot(Start, End);
 
 	// crosshair

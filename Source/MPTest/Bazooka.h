@@ -13,5 +13,14 @@ UCLASS()
 class MPTEST_API ABazooka : public AWeapon
 {
 	GENERATED_BODY()
+
+public:
+	ABazooka();
+
+protected:
+	virtual void PressShoot_Implementation() override;
 	
+	UPROPERTY(EditAnywhere, Category = "Shell")
+	TSubclassOf<class AShell> Shell;
+
 };
