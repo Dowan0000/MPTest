@@ -262,7 +262,7 @@ void AShooterCharacter::PressZoom()
 			{
 				ZoomWidget->AddToViewport();
 				
-				SpringArm->TargetArmLength = -4000.f;
+				SpringArm->TargetArmLength = -2500.f;
 				ZoomControlValue = 0.2f;
 			}
 		}
