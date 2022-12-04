@@ -253,7 +253,8 @@ void AShooterCharacter::ResPressDropWeapon_Implementation()
 
 void AShooterCharacter::PressZoom()
 {
-	if (EquipWeapon && EquipWeapon->GetItemType() == EItemType::EIT_Sniper)
+	if (EquipWeapon && (EquipWeapon->GetItemType() == EItemType::EIT_Sniper
+		|| EquipWeapon->GetItemType() == EItemType::EIT_Bazooka))
 	{
 		if (ZoomWidgetClass)
 		{
@@ -271,7 +272,8 @@ void AShooterCharacter::PressZoom()
 
 void AShooterCharacter::ReleasedZoom()
 {
-	if (EquipWeapon && EquipWeapon->GetItemType() == EItemType::EIT_Sniper)
+	if (EquipWeapon && (EquipWeapon->GetItemType() == EItemType::EIT_Sniper
+		|| EquipWeapon->GetItemType() == EItemType::EIT_Bazooka))
 	{
 		if (ZoomWidgetClass && ZoomWidget)
 		{

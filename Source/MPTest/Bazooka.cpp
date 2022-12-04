@@ -29,11 +29,10 @@ void ABazooka::PressShoot_Implementation()
 			if (ShootEffect)
 			{
 				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShootEffect, SocketTransform);
-
-				if (Shell)
-				{
-					GetWorld()->SpawnActor<AActor>(Shell, SocketTransform);
-				}
+			}
+			if (Shell)
+			{
+				GetWorld()->SpawnActor<AActor>(Shell, SocketTransform);
 			}
 		}
 	}
