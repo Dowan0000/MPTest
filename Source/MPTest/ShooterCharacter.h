@@ -69,6 +69,9 @@ protected:
 
 	void PressZoom();
 	void ReleasedZoom();
+	
+	void PressCrouch();
+	void ReleasedCrouch();
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
@@ -104,6 +107,9 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Zoom", meta = (AllowPrivateAccess = "true"))
 	float ZoomControlValue;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crouch", meta = (AllowPrivateAccess = "true"))
+	bool bIsCrouch;
+
 public:	
 	FORCEINLINE AWeapon* GetEquipWeapon() const { return EquipWeapon; }
 	FORCEINLINE void SetEquipWeapon(AWeapon* NewWeapon) { EquipWeapon = NewWeapon; }
@@ -115,6 +121,8 @@ public:
 	FORCEINLINE void SetCurWeaponNumber(int NewWeaponNumber) { CurWeaponNumber = NewWeaponNumber; }
 
 	FORCEINLINE float GetMaxHealth() const { return MaxHealth; }
+
+	FORCEINLINE bool GetbIsCrouch() const { return bIsCrouch; }
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 	TArray<AWeapon*> Inventory;

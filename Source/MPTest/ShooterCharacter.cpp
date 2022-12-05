@@ -14,7 +14,8 @@
 
 AShooterCharacter::AShooterCharacter() : 
 	NumberOfWeapon(0), CurWeaponNumber(0),
-	Health(100), MaxHealth(100), ZoomControlValue(1.f)
+	Health(100), MaxHealth(100), ZoomControlValue(1.f),
+	bIsCrouch(false)
 
 {
  	PrimaryActorTick.bCanEverTick = true;
@@ -72,6 +73,9 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 	PlayerInputComponent->BindAction(TEXT("Zoom"), EInputEvent::IE_Pressed, this, &AShooterCharacter::PressZoom);
 	PlayerInputComponent->BindAction(TEXT("Zoom"), EInputEvent::IE_Released, this, &AShooterCharacter::ReleasedZoom);
+
+	PlayerInputComponent->BindAction(TEXT("Crouch"), EInputEvent::IE_Pressed, this, &AShooterCharacter::PressCrouch);
+	PlayerInputComponent->BindAction(TEXT("Crouch"), EInputEvent::IE_Released, this, &AShooterCharacter::ReleasedCrouch);
 
 }
 
@@ -264,7 +268,7 @@ void AShooterCharacter::PressZoom()
 				ZoomWidget->AddToViewport();
 				
 				SpringArm->TargetArmLength = -2500.f;
-				ZoomControlValue = 0.2f;
+				ZoomControlValue = 0.1f; // zoom 시 마우스 감도
 			}
 		}
 	}
@@ -283,4 +287,15 @@ void AShooterCharacter::ReleasedZoom()
 			ZoomControlValue = 1.f;
 		}
 	}
+}
+
+void AShooterCharacter::PressCrouch()
+{
+	bIsCrouch = true;
+	// 이동속도 조절
+}
+
+void AShooterCharacter::ReleasedCrouch()
+{
+	bIsCrouch = false;
 }

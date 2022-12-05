@@ -39,5 +39,7 @@ void UShooterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		{
 			ItemType = Character->GetEquipWeapon()->GetItemType();
 		}
+
+		IsCrouch = Character->GetbIsCrouch();
 	}
 }

@@ -118,27 +118,26 @@ void AShooterHUD::SetCrossHairState(ECrossHair NewCrossHair)
 	{
 		CrosshairInAir = FMath::FInterpTo(CrosshairInAir, 0.f, UGameplayStatics::GetWorldDeltaSeconds(GetWorld()), 10.f);
 	}
+
 	// Crosshair When Shoot
 	if (Character->GetEquipWeapon()->GetbIsShoot())
 	{
 		CrosshairIsShoot = FMath::FInterpTo(CrosshairIsShoot, 10.f, UGameplayStatics::GetWorldDeltaSeconds(GetWorld()), 10.f);
+		
 		// LookUp When Shoot
-		LookUpWhenShoot = FMath::FInterpTo(0, 2.5f, UGameplayStatics::GetWorldDeltaSeconds(GetWorld()), 20.f);
+		LookUpWhenShoot = FMath::FInterpTo(0, 0.5f, UGameplayStatics::GetWorldDeltaSeconds(GetWorld()), 20.f);
 		Character->LookUp(-LookUpWhenShoot);
 		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString::Printf(TEXT("%f"), LookUpWhenShoot));
 		
-		if (LookUpWhenShoot < 2.f)
-		{
-			LookUpWhenShoot = FMath::FInterpTo(0, -2.f, UGameplayStatics::GetWorldDeltaSeconds(GetWorld()), 20.f);
-			Character->LookUp(-LookUpWhenShoot);
-			//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString::Printf(TEXT("%f"), LookUpWhenShoot));
-		}
 	}
 	else
 	{
 		CrosshairIsShoot = FMath::FInterpTo(CrosshairIsShoot, 0.f, UGameplayStatics::GetWorldDeltaSeconds(GetWorld()), 5.f);
-		LookUpWhenShoot = 0.f;
+		//LookUpWhenShoot = 0.f;
 	}
+
+	// Crosshair When Crouch
+
 
 	switch (NewCrossHair)
 	{
