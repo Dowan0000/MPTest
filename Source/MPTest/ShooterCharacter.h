@@ -71,7 +71,20 @@ protected:
 	void ReleasedZoom();
 	
 	void PressCrouch();
+
+	UFUNCTION(Server, Reliable)
+	void ReqPressCrouch();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void ResPressCrouch();
+
 	void ReleasedCrouch();
+
+	UFUNCTION(Server, Reliable)
+	void ReqReleasedCrouch();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void ResReleasedCrouch();
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))

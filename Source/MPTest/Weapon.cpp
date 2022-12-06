@@ -182,7 +182,7 @@ void AWeapon::ReqShoot_Implementation(FVector Start, FVector End)
 	}
 
 	DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 5.f);
-	
+	UE_LOG(LogTemp, Warning, TEXT("Hit.BoneName : %s"), *Hit.BoneName.ToString());
 }
 
 void AWeapon::PressPickUpItem_Implementation()

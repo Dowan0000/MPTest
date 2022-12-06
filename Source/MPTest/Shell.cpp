@@ -35,7 +35,6 @@ void AShell::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetime
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(AShell, HitEffect);
-	
 }
 
 void AShell::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -45,6 +44,22 @@ void AShell::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Othe
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitEffect, GetActorTransform());
 
 	// Damage 처리
+	TArray<FHitResult> Hits;
+	bool bResult = GetWorld()->SweepMultiByChannel(Hits, GetActorLocation(), GetActorLocation(),
+		FQuat::Identity, ECollisionChannel::ECC_Camera,
+		FCollisionShape::MakeSphere(200.f));
+	
+	if (bResult)
+	{
+		//뼈마다 다처맞는거같음 ...
+		for (FHitResult& HitResult : Hits)
+		{
+			FDamageEvent Damage;
+			HitResult.Actor->TakeDamage(10.f, Damage,
+				GetWorld()->GetFirstPlayerController(), this);
+			UE_LOG(LogTemp, Warning, TEXT("%s"), *HitResult.BoneName.ToString());
+		}
+	}
 
 	Destroy();
 }

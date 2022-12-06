@@ -11,6 +11,7 @@
 #include "ShooterHUD.h"
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 AShooterCharacter::AShooterCharacter() : 
 	NumberOfWeapon(0), CurWeaponNumber(0),
@@ -28,6 +29,7 @@ AShooterCharacter::AShooterCharacter() :
 
 	SpringArm->TargetArmLength = 250.f;
 	SpringArm->bUsePawnControlRotation = true;
+
 }
 
 void AShooterCharacter::BeginPlay()
@@ -73,6 +75,9 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 	PlayerInputComponent->BindAction(TEXT("Zoom"), EInputEvent::IE_Pressed, this, &AShooterCharacter::PressZoom);
 	PlayerInputComponent->BindAction(TEXT("Zoom"), EInputEvent::IE_Released, this, &AShooterCharacter::ReleasedZoom);
+
+	PlayerInputComponent->BindAction(TEXT("Crouch"), EInputEvent::IE_Pressed, this, &AShooterCharacter::PressCrouch);
+	PlayerInputComponent->BindAction(TEXT("Crouch"), EInputEvent::IE_Released, this, &AShooterCharacter::ReleasedCrouch);
 
 	PlayerInputComponent->BindAction(TEXT("Crouch"), EInputEvent::IE_Pressed, this, &AShooterCharacter::PressCrouch);
 	PlayerInputComponent->BindAction(TEXT("Crouch"), EInputEvent::IE_Released, this, &AShooterCharacter::ReleasedCrouch);
@@ -291,11 +296,32 @@ void AShooterCharacter::ReleasedZoom()
 
 void AShooterCharacter::PressCrouch()
 {
+	ReqPressCrouch();
+}
+
+void AShooterCharacter::ReqPressCrouch_Implementation()
+{
+	ResPressCrouch();
+}
+
+void AShooterCharacter::ResPressCrouch_Implementation()
+{
 	bIsCrouch = true;
-	// 이동속도 조절
+	Crouch();
 }
 
 void AShooterCharacter::ReleasedCrouch()
 {
+	ReqReleasedCrouch();
+}
+
+void AShooterCharacter::ReqReleasedCrouch_Implementation()
+{
+	ResReleasedCrouch();
+}
+
+void AShooterCharacter::ResReleasedCrouch_Implementation()
+{
 	bIsCrouch = false;
+	UnCrouch();
 }

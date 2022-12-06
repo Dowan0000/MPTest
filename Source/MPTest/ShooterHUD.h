@@ -82,6 +82,9 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Crosshair", meta = (AllowPrivateAccess = "true"))
 	float LookUpWhenShoot;
 
+	UPROPERTY(VisibleAnywhere, Category = "Crosshair", meta = (AllowPrivateAccess = "true"))
+	float CrosshairCrouch;
+
 public:
 	UFUNCTION(BlueprintNativeEvent)
 	void SetHealth(float HealthRate);

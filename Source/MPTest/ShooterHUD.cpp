@@ -123,27 +123,46 @@ void AShooterHUD::SetCrossHairState(ECrossHair NewCrossHair)
 	if (Character->GetEquipWeapon()->GetbIsShoot())
 	{
 		CrosshairIsShoot = FMath::FInterpTo(CrosshairIsShoot, 10.f, UGameplayStatics::GetWorldDeltaSeconds(GetWorld()), 10.f);
-		
+
 		// LookUp When Shoot
-		LookUpWhenShoot = FMath::FInterpTo(0, 0.5f, UGameplayStatics::GetWorldDeltaSeconds(GetWorld()), 20.f);
-		Character->LookUp(-LookUpWhenShoot);
+		if (Character->GetbIsCrouch())
+		{
+			// when crouch
+			LookUpWhenShoot = FMath::FInterpTo(0, 0.3f, UGameplayStatics::GetWorldDeltaSeconds(GetWorld()), 20.f);
+			Character->LookUp(-LookUpWhenShoot);
+		}
+		else
+		{
+			// when standup
+			LookUpWhenShoot = FMath::FInterpTo(0, 0.5f, UGameplayStatics::GetWorldDeltaSeconds(GetWorld()), 20.f);
+			Character->LookUp(-LookUpWhenShoot);
+		}
 		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString::Printf(TEXT("%f"), LookUpWhenShoot));
-		
 	}
 	else
 	{
 		CrosshairIsShoot = FMath::FInterpTo(CrosshairIsShoot, 0.f, UGameplayStatics::GetWorldDeltaSeconds(GetWorld()), 5.f);
 		//LookUpWhenShoot = 0.f;
 	}
+	// CrosshairIsShoot interp
+	//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString::Printf(TEXT("%f"), CrosshairIsShoot));
 
-	// Crosshair When Crouch
-
+	// Crosshair When Crouch 수정 필요...
+	if (Character->GetbIsCrouch())
+	{
+		CrosshairCrouch = FMath::FInterpTo(CrosshairCrouch, 5.f, UGameplayStatics::GetWorldDeltaSeconds(GetWorld()), 10.f);
+	}
+	else
+	{
+		CrosshairCrouch = FMath::FInterpTo(CrosshairCrouch, 0.f, UGameplayStatics::GetWorldDeltaSeconds(GetWorld()), 10.f);
+	}
+	
 
 	switch (NewCrossHair)
 	{
 	case ECrossHair::ECH_Pistol:
-		DrawCrossHairXAxis = 10.f * CrosshairVelocity + CrosshairInAir + CrosshairIsShoot;
-		DrawCrossHairYAxis = 10.f * CrosshairVelocity + CrosshairInAir + CrosshairIsShoot;
+		DrawCrossHairXAxis = 10.f * CrosshairVelocity + CrosshairInAir + CrosshairIsShoot - CrosshairCrouch;
+		DrawCrossHairYAxis = 10.f * CrosshairVelocity + CrosshairInAir + CrosshairIsShoot - CrosshairCrouch;
 
 		DrawCrossHair(CrossHairTop, 0.f, -DrawCrossHairYAxis);
 		DrawCrossHair(CrossHairBottom, 0.f, DrawCrossHairYAxis);
@@ -152,8 +171,8 @@ void AShooterHUD::SetCrossHairState(ECrossHair NewCrossHair)
 
 		break;
 	case ECrossHair::ECH_PistolMove:
-		DrawCrossHairXAxis = 10.f * CrosshairVelocity + CrosshairInAir + CrosshairIsShoot;
-		DrawCrossHairYAxis = 10.f * CrosshairVelocity + CrosshairInAir + CrosshairIsShoot;
+		DrawCrossHairXAxis = 10.f * CrosshairVelocity + CrosshairInAir + CrosshairIsShoot - CrosshairCrouch;
+		DrawCrossHairYAxis = 10.f * CrosshairVelocity + CrosshairInAir + CrosshairIsShoot - CrosshairCrouch;
 
 		DrawCrossHair(CrossHairTop, 0.f, -DrawCrossHairYAxis);
 		DrawCrossHair(CrossHairBottom, 0.f, DrawCrossHairYAxis);
@@ -162,8 +181,8 @@ void AShooterHUD::SetCrossHairState(ECrossHair NewCrossHair)
 
 		break;
 	case ECrossHair::ECH_Rifle:
-		DrawCrossHairXAxis = CrosshairVelocity + CrosshairInAir + CrosshairIsShoot;
-		DrawCrossHairYAxis = CrosshairVelocity + CrosshairInAir + CrosshairIsShoot;
+		DrawCrossHairXAxis = CrosshairVelocity + CrosshairInAir + CrosshairIsShoot - CrosshairCrouch;
+		DrawCrossHairYAxis = CrosshairVelocity + CrosshairInAir + CrosshairIsShoot - CrosshairCrouch;
 
 		DrawCrossHair(CrossHairTop, 0.f, -DrawCrossHairYAxis);
 		DrawCrossHair(CrossHairBottom, 0.f, DrawCrossHairYAxis);
@@ -172,8 +191,8 @@ void AShooterHUD::SetCrossHairState(ECrossHair NewCrossHair)
 
 		break;
 	case ECrossHair::ECH_RifleMove:
-		DrawCrossHairXAxis = 5.f * CrosshairVelocity + CrosshairInAir + CrosshairIsShoot;
-		DrawCrossHairYAxis = 5.f * CrosshairVelocity + CrosshairInAir + CrosshairIsShoot;
+		DrawCrossHairXAxis = 5.f * CrosshairVelocity + CrosshairInAir + CrosshairIsShoot - CrosshairCrouch;
+		DrawCrossHairYAxis = 5.f * CrosshairVelocity + CrosshairInAir + CrosshairIsShoot - CrosshairCrouch;
 
 		DrawCrossHair(CrossHairTop, 0.f, -DrawCrossHairYAxis);
 		DrawCrossHair(CrossHairBottom, 0.f, DrawCrossHairYAxis);
