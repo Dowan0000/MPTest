@@ -63,6 +63,9 @@ void AWeapon::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetim
 	DOREPLIFETIME(AWeapon, ShootMontage);
 	DOREPLIFETIME(AWeapon, ShootEffect);
 	DOREPLIFETIME(AWeapon, ItemType);
+	DOREPLIFETIME(AWeapon, ShootSound);
+	DOREPLIFETIME(AWeapon, HitEffect);
+	DOREPLIFETIME(AWeapon, HitSound);
 }
 
 
@@ -100,9 +103,10 @@ void AWeapon::PressShoot_Implementation()
 		if (SkeletalSocketName)
 		{
 			const FTransform SocketTransform = SkeletalSocketName->GetSocketTransform(Mesh);
-			if (ShootEffect)
+			if (ShootEffect && ShootSound)
 			{
 				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShootEffect, SocketTransform);
+				UGameplayStatics::SpawnSoundAtLocation(GetWorld(), ShootSound, SocketTransform.GetLocation());
 			}
 		}
 	}
@@ -170,16 +174,26 @@ void AWeapon::ReqShoot_Implementation(FVector Start, FVector End)
 	Params.AddIgnoredActor(this);
 	Params.AddIgnoredActor(GetOwner());
 
-	GetWorld()->LineTraceSingleByChannel(Hit, Start, End,
+	bool bResult = GetWorld()->LineTraceSingleByChannel(Hit, Start, End,
 		ECollisionChannel::ECC_Camera, Params);
 
-	if (Hit.Actor.IsValid())
+	if (bResult)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Hit.Actor.IsValid : %s"), *Hit.Actor->GetName());
-		FDamageEvent Damage;
-		Hit.Actor->TakeDamage(10.f, Damage,
-			Character->GetController(), this);
+		if (Hit.Actor.IsValid())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Hit.Actor.IsValid : %s"), *Hit.Actor->GetName());
+			FDamageEvent Damage;
+			Hit.Actor->TakeDamage(10.f, Damage,
+				Character->GetController(), this);
+		}
+
+		if (HitEffect && HitSound)
+		{
+			// Multicast로 보내야 복제됨
+			HitEffectSound(Hit.Location);
+		}
 	}
+	
 
 	DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 5.f);
 	UE_LOG(LogTemp, Warning, TEXT("Hit.BoneName : %s"), *Hit.BoneName.ToString());
@@ -273,4 +287,10 @@ void AWeapon::SetItemState(EItemState NewItemState)
 
 		break;
 	}
+}
+
+void AWeapon::HitEffectSound_Implementation(FVector Location)
+{
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitEffect, Location);
+	UGameplayStatics::SpawnSoundAtLocation(GetWorld(), HitSound, Location);
 }

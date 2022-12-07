@@ -2,11 +2,22 @@
 
 
 #include "Rifle.h"
+#include "Net/UnrealNetwork.h"
 
 ARifle::ARifle()
 {
 	ItemType = EItemType::EIT_Rifle;
 }
+
+// 상속받은 변수 복제 x ??
+// 
+//void ARifle::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
+//{
+//	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+//
+//	DOREPLIFETIME(ARifle, ShootMontage);
+//	DOREPLIFETIME(ARifle, ShootEffect);
+//}
 
 void ARifle::PressShoot_Implementation()
 {

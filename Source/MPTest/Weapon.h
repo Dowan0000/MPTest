@@ -58,6 +58,9 @@ protected:
 	void PressPickUpItem();
 	virtual void PressPickUpItem_Implementation() override;
 
+	UFUNCTION(NetMulticast, Reliable)
+	void HitEffectSound(FVector Location);
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
 	class UBoxComponent* Box;
@@ -73,6 +76,15 @@ protected:
 
 	UPROPERTY(Replicated, EditAnywhere, BlueprintReadOnly, Category = "Shoot")
 	class UParticleSystem* ShootEffect;
+
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadOnly, Category = "Shoot")
+	class USoundBase* ShootSound;
+
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadOnly, Category = "Shoot")
+	UParticleSystem* HitEffect;
+
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadOnly, Category = "Shoot")
+	USoundBase* HitSound;
 
 	UPROPERTY(Replicated, EditAnywhere, BlueprintReadOnly, Category = "Item")
 	EItemType ItemType;
