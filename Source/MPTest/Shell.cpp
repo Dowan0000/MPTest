@@ -8,7 +8,8 @@
 #include "Net/UnrealNetwork.h"
 
 // Sets default values
-AShell::AShell()
+AShell::AShell() : 
+	Damage(10.f)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -41,12 +42,16 @@ void AShell::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Othe
 {
 	UE_LOG(LogTemp, Warning, TEXT("Shell Overlap!"));
 
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitEffect, GetActorTransform());
+	if (HitEffect && HitSound)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitEffect, GetActorTransform());
+		UGameplayStatics::SpawnSoundAtLocation(GetWorld(), HitSound, GetActorLocation());
+	}
 
 	// Damage 처리
 	TArray<FHitResult> Hits;
 	bool bResult = GetWorld()->SweepMultiByChannel(Hits, GetActorLocation(), GetActorLocation(),
-		FQuat::Identity, ECollisionChannel::ECC_Camera,
+		FQuat::Identity, ECollisionChannel::ECC_GameTraceChannel1,
 		FCollisionShape::MakeSphere(200.f));
 	
 	if (bResult)
@@ -54,8 +59,8 @@ void AShell::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Othe
 		//뼈마다 다처맞는거같음 ...
 		for (FHitResult& HitResult : Hits)
 		{
-			FDamageEvent Damage;
-			HitResult.Actor->TakeDamage(10.f, Damage,
+			FDamageEvent DamageEvent;
+			HitResult.Actor->TakeDamage(Damage, DamageEvent,
 				GetWorld()->GetFirstPlayerController(), this);
 			UE_LOG(LogTemp, Warning, TEXT("%s"), *HitResult.BoneName.ToString());
 		}

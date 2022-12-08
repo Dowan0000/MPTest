@@ -103,6 +103,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SocketName", meta = (AllowPrivateAccess = "true"))
 	FName SocketName;
 
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	float Damage;
+
 public:	
 	FORCEINLINE USkeletalMeshComponent* GetMesh() const { return Mesh; }
 	

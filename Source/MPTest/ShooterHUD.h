@@ -56,7 +56,10 @@ private:
 	ECrossHair CrossHairState;
 
 	UPROPERTY(EditAnywhere, Category = "Crosshair", meta = (AllowPrivateAccess = "true"))
-	class UTexture2D* CrossHairTop;
+	class UTexture2D* CrossHairCenter;
+
+	UPROPERTY(EditAnywhere, Category = "Crosshair", meta = (AllowPrivateAccess = "true"))
+	UTexture2D* CrossHairTop;
 	
 	UPROPERTY(EditAnywhere, Category = "Crosshair", meta = (AllowPrivateAccess = "true"))
 	UTexture2D* CrossHairBottom;

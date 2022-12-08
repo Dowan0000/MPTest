@@ -128,14 +128,15 @@ void AShooterHUD::SetCrossHairState(ECrossHair NewCrossHair)
 		if (Character->GetbIsCrouch())
 		{
 			// when crouch
-			LookUpWhenShoot = FMath::FInterpTo(0, 0.3f, UGameplayStatics::GetWorldDeltaSeconds(GetWorld()), 20.f);
-			Character->LookUp(-LookUpWhenShoot);
+			//LookUpWhenShoot = FMath::FInterpTo(0, 0.3f, UGameplayStatics::GetWorldDeltaSeconds(GetWorld()), 20.f);
+			//Character->LookUp(-LookUpWhenShoot);
 		}
 		else
 		{
 			// when standup
-			LookUpWhenShoot = FMath::FInterpTo(0, 0.5f, UGameplayStatics::GetWorldDeltaSeconds(GetWorld()), 20.f);
-			Character->LookUp(-LookUpWhenShoot);
+			//LookUpWhenShoot = FMath::FInterpTo(0, 0.5f, UGameplayStatics::GetWorldDeltaSeconds(GetWorld()), 20.f);
+			//Character->LookUp(-LookUpWhenShoot);
+			Character->LookUp(-0.2f);
 		}
 		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString::Printf(TEXT("%f"), LookUpWhenShoot));
 	}
@@ -201,9 +202,11 @@ void AShooterHUD::SetCrossHairState(ECrossHair NewCrossHair)
 
 		break;
 	case ECrossHair::ECH_Sniper:
+		DrawCrossHair(CrossHairCenter, 0.f, 0.f);
 
 		break;
 	case ECrossHair::ECH_Bazooka:
+		DrawCrossHair(CrossHairCenter, 0.f, 0.f);
 
 		break;
 	}

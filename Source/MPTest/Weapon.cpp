@@ -13,7 +13,7 @@
 // Sets default values
 AWeapon::AWeapon() : 
 	ItemType(EItemType::EIT_Pistol), ItemState(EItemState::EIS_Dropped),
-	bPressShoot(false), SocketName("Pistol_Socket")
+	bPressShoot(false), SocketName("Pistol_Socket"), Damage(10.f)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -92,7 +92,7 @@ void AWeapon::BoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 
 void AWeapon::PressShoot_Implementation()
 {
-	if (Character)
+	/*if (Character)
 	{
 		if (ShootMontage)
 		{
@@ -109,7 +109,7 @@ void AWeapon::PressShoot_Implementation()
 				UGameplayStatics::SpawnSoundAtLocation(GetWorld(), ShootSound, SocketTransform.GetLocation());
 			}
 		}
-	}
+	}*/
 
 	LineTrace();
 }
@@ -151,8 +151,9 @@ void AWeapon::LineTrace()
 	if (SkeletalSocketName)
 	{
 		const FTransform SocketTransform = SkeletalSocketName->GetSocketTransform(Mesh);
-		Start = SocketTransform.GetLocation();
+		//Start = SocketTransform.GetLocation();
 	}
+	Start = WorldPosition;
 	End = WorldPosition + WorldDirection * 50'000.f;
 
 	ReqShoot(Start, End);
@@ -174,6 +175,8 @@ void AWeapon::ReqShoot_Implementation(FVector Start, FVector End)
 	Params.AddIgnoredActor(this);
 	Params.AddIgnoredActor(GetOwner());
 
+	// 쏘는데 잘 안맞는거 같다 수정*************
+
 	bool bResult = GetWorld()->LineTraceSingleByChannel(Hit, Start, End,
 		ECollisionChannel::ECC_Camera, Params);
 
@@ -181,10 +184,26 @@ void AWeapon::ReqShoot_Implementation(FVector Start, FVector End)
 	{
 		if (Hit.Actor.IsValid())
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Hit.Actor.IsValid : %s"), *Hit.Actor->GetName());
-			FDamageEvent Damage;
-			Hit.Actor->TakeDamage(10.f, Damage,
-				Character->GetController(), this);
+			FDamageEvent DamageEvent;
+
+			if (Hit.BoneName.ToString() == "head")
+			{
+				Hit.Actor->TakeDamage(Damage * 2.f, DamageEvent,
+					Character->GetController(), this);
+			}
+			else if (Hit.BoneName.ToString() == "pelvis" || 
+				Hit.BoneName.ToString() == "spine_01" || 
+				Hit.BoneName.ToString() == "spine_02" ||
+				Hit.BoneName.ToString() == "spine_03")
+			{
+				Hit.Actor->TakeDamage(Damage * 1.5f, DamageEvent,
+					Character->GetController(), this);
+			}
+			else
+			{
+				Hit.Actor->TakeDamage(Damage, DamageEvent,
+					Character->GetController(), this);
+			}
 		}
 
 		if (HitEffect && HitSound)
@@ -291,6 +310,25 @@ void AWeapon::SetItemState(EItemState NewItemState)
 
 void AWeapon::HitEffectSound_Implementation(FVector Location)
 {
+	if (Character)
+	{
+		if (ShootMontage)
+		{
+			Character->PlayAnimMontage(ShootMontage);
+		}
+
+		const USkeletalMeshSocket* SkeletalSocketName = Mesh->GetSocketByName(FName("MuzzleFlash"));
+		if (SkeletalSocketName)
+		{
+			const FTransform SocketTransform = SkeletalSocketName->GetSocketTransform(Mesh);
+			if (ShootEffect && ShootSound)
+			{
+				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShootEffect, SocketTransform);
+				UGameplayStatics::SpawnSoundAtLocation(GetWorld(), ShootSound, SocketTransform.GetLocation());
+			}
+		}
+	}
+
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitEffect, Location);
 	UGameplayStatics::SpawnSoundAtLocation(GetWorld(), HitSound, Location);
 }
