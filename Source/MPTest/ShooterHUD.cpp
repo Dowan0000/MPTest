@@ -7,12 +7,14 @@
 #include "Weapon.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "MainWidget.h"
 
 void AShooterHUD::DrawHUD()
 {
 	Super::DrawHUD();
 
 	EITnECH();
+
 }
 
 void AShooterHUD::BeginPlay()
@@ -136,7 +138,7 @@ void AShooterHUD::SetCrossHairState(ECrossHair NewCrossHair)
 			// when standup
 			//LookUpWhenShoot = FMath::FInterpTo(0, 0.5f, UGameplayStatics::GetWorldDeltaSeconds(GetWorld()), 20.f);
 			//Character->LookUp(-LookUpWhenShoot);
-			Character->LookUp(-0.2f);
+			Character->LookUp(-0.1f);
 		}
 		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString::Printf(TEXT("%f"), LookUpWhenShoot));
 	}
@@ -229,3 +231,9 @@ void AShooterHUD::DrawCrossHair(UTexture2D* Texture, float XAxis, float YAxis)
 	DrawTexture(Texture, TextureDrawPoint.X, TextureDrawPoint.Y,
 		TextureWidth, TextureHeight, 0.f, 0.f, 1.f, 1.f);
 }
+
+void AShooterHUD::DrawHUDTime_Implementation(int Minutes, int Seconds)
+{
+
+}
+

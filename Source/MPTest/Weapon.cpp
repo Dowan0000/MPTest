@@ -324,6 +324,7 @@ void AWeapon::HitEffectSound_Implementation(FVector Location)
 			if (ShootEffect && ShootSound)
 			{
 				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShootEffect, SocketTransform);
+				// 고개들면 안들림
 				UGameplayStatics::SpawnSoundAtLocation(GetWorld(), ShootSound, SocketTransform.GetLocation());
 			}
 		}

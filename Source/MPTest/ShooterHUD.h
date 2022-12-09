@@ -93,4 +93,8 @@ public:
 	void SetHealth(float HealthRate);
 
 	void SetCrossHairState(ECrossHair NewCrossHair);
+	
+	UFUNCTION(BlueprintNativeEvent)
+	void DrawHUDTime(int Minutes, int Seconds);
+
 };

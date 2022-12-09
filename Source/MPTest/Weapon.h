@@ -5,16 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "WeaponInterface.h"
+#include "ItemType.h"
 #include "Weapon.generated.h"
-
-UENUM(BlueprintType)
-enum class EItemType : uint8
-{
-	EIT_Pistol UMETA(DisplayName = "Pistol"),
-	EIT_Rifle UMETA(DisplayName = "Rifle"),
-	EIT_Sniper UMETA(DisplayName = "Sniper"),
-	EIT_Bazooka UMETA(DisplayName = "Bazooka"),
-};
 
 UENUM(BlueprintType)
 enum class EItemState : uint8

@@ -19,7 +19,7 @@ void ARifle::PressShoot_Implementation()
 
 }
 
-void ARifle::PressShootTimer()
+void ARifle::PressShootTimer_Implementation()
 {
 	if (bPressShoot)
 	{
