@@ -3,6 +3,8 @@
 
 #include "ShooterPC.h"
 #include "ShooterHUD.h"
+#include "TeamGameMode.h"
+#include "Kismet/GameplayStatics.h"
 
 AShooterPC::AShooterPC()
 {
@@ -25,6 +27,10 @@ void AShooterPC::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (IsLocalController())
+	{
+		CreateTeamWidget();
+	}
 }
 
 void AShooterPC::SetHUDTime()
@@ -62,4 +68,8 @@ void AShooterPC::ClientTime_Implementation(float TimeFromServer, float ServerTim
 {
 	float RoundTripTime = GetWorld()->GetTimeSeconds() - TimeFromServer;
 	CurServerTime = ServerTime + RoundTripTime / 2.f;
+}
+
+void AShooterPC::CreateTeamWidget_Implementation()
+{
 }

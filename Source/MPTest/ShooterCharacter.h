@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Team.h"
 #include "ShooterCharacter.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FDele_Multi_UpdateHP_OneParam, float);
@@ -122,6 +123,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crouch", meta = (AllowPrivateAccess = "true"))
 	bool bIsCrouch;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Team", meta = (AllowPrivateAccess = "true"))
+	ETeam Team;
 
 public:	
 	FORCEINLINE AWeapon* GetEquipWeapon() const { return EquipWeapon; }

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "Team.h"
 #include "ShooterPC.generated.h"
 
 /**
@@ -29,6 +30,9 @@ protected:
 
 	UFUNCTION(Client, Reliable)
 	void ClientTime(float TimeFromServer, float ServerTime);
+
+	UFUNCTION(BlueprintNativeEvent)
+	void CreateTeamWidget();
 
 private:
 	float CurServerTime;
