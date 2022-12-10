@@ -14,11 +14,17 @@ void AShooterPC::Tick(float DeltaTimes)
 	Super::Tick(DeltaTimes);
 
 	SetHUDTime();
-	
+
 	if (!HasAuthority())
 	{
 		ServerTime(GetWorld()->GetTimeSeconds());
 	}
+}
+
+void AShooterPC::BeginPlay()
+{
+	Super::BeginPlay();
+
 }
 
 void AShooterPC::SetHUDTime()

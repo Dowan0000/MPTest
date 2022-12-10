@@ -20,6 +20,8 @@ public:
 	virtual void Tick(float DeltaTimes) override;
 
 protected:
+	virtual void BeginPlay() override;
+
 	void SetHUDTime();
 
 	UFUNCTION(Server, Reliable)
