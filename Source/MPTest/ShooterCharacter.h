@@ -124,7 +124,7 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crouch", meta = (AllowPrivateAccess = "true"))
 	bool bIsCrouch;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Team", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Team", meta = (AllowPrivateAccess = "true"), meta = (ExposeOnSpawn = "true"))
 	ETeam Team;
 
 public:	
@@ -140,6 +140,8 @@ public:
 	FORCEINLINE float GetMaxHealth() const { return MaxHealth; }
 
 	FORCEINLINE bool GetbIsCrouch() const { return bIsCrouch; }
+
+	FORCEINLINE ETeam GetTeam() const { return Team; }
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 	TArray<AWeapon*> Inventory;

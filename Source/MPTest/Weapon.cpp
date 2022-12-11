@@ -175,15 +175,25 @@ void AWeapon::ReqShoot_Implementation(FVector Start, FVector End)
 	Params.AddIgnoredActor(this);
 	Params.AddIgnoredActor(GetOwner());
 
-	// 쏘는데 잘 안맞는거 같다 수정*************
-
+	
 	bool bResult = GetWorld()->LineTraceSingleByChannel(Hit, Start, End,
 		ECollisionChannel::ECC_Camera, Params);
 
 	if (bResult)
 	{
+		if (HitEffect && HitSound)
+		{
+			// Multicast로 보내야 복제됨
+			HitEffectSound(Hit.Location);
+		}
+
 		if (Hit.Actor.IsValid())
 		{
+			// 같은 팀 일경우 데미지x 
+			AShooterCharacter* HitActor = Cast<AShooterCharacter>(Hit.Actor);
+			if (HitActor == nullptr) return;
+			if (Character->GetTeam() == HitActor->GetTeam()) return;
+			
 			FDamageEvent DamageEvent;
 
 			if (Hit.BoneName.ToString() == "head")
@@ -206,11 +216,6 @@ void AWeapon::ReqShoot_Implementation(FVector Start, FVector End)
 			}
 		}
 
-		if (HitEffect && HitSound)
-		{
-			// Multicast로 보내야 복제됨
-			HitEffectSound(Hit.Location);
-		}
 	}
 	
 
